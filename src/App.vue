@@ -1,5 +1,5 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+
 </script>
 
 <template>
@@ -7,15 +7,9 @@ import HelloWorld from './components/HelloWorld.vue'
   <header class="flex justify-between items-center p-4 border-b border-gray-300">
     <!-- 왼쪽 로고 및 상호명 -->
     <div class="flex items-center space-x-4">
+
       <!-- 로고 이미지 -->
-      <img src="https://via.placeholder.com/50" alt="ALLMart 로고" class="w-12 h-12">
-
-      <!-- 텍스트 -->
-      <div>
-        <div class="text-2xl font-bold">ALLMart</div>
-        <div class="text-sm text-gray-500">말 한마디로 결제까지</div>
-      </div>
-
+      <img src="./assets/logo.png" alt="ALLMart 로고" class="w-[240px] h-auto">
       <!-- 세로 구분선 -->
       <div class="border-l border-gray-400 h-12"></div>
 
@@ -56,26 +50,6 @@ import HelloWorld from './components/HelloWorld.vue'
     <div class="min-h-screen max-h-fit w-fit bg-blue-200 p-4">
       <ul class="space-y-2">
         <li>
-          <ul class="mb-2 w-64 bg-white rounded-lg shadow-md overflow-hidden">
-            <li><a href="#" class=" cursor-pointer bg-blue-400 text-white p-4 flex justify-between items-center">홈으로 이동</a></li>
-          </ul>
-          <details class="w-64 bg-white rounded-lg shadow-md overflow-hidden">
-            <summary class="cursor-pointer bg-blue-400 text-white p-4 flex justify-between items-center">
-              <span>매장 관리</span>
-              <!-- Arrow icon -->
-              <svg class="w-4 h-4 transform transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </summary>
-            <div class="p-4 space-y-2 text-gray-700">
-              <p>매장 관리</p>
-              <p>매장 찾기</p>
-              <p>매장 전단지 보기</p>
-              <p>매장 직원 관리</p>
-            </div>
-          </details>
-        </li>
-        <li>
           <details class="w-64 bg-white rounded-lg shadow-md overflow-hidden">
             <summary class="cursor-pointer bg-blue-400 text-white p-4 flex justify-between items-center">
               <span>공지사항</span>
@@ -86,40 +60,98 @@ import HelloWorld from './components/HelloWorld.vue'
             </summary>
             <div class="p-4 space-y-2 text-gray-700">
               <p>공지사항</p>
-              <p>사내 공지</p>
-              <p>마트 공지</p>
+              <p>공지등록</p>
+              <p>시스템 공지사항</p>
             </div>
           </details>
         </li>
         <li>
           <details class="w-64 bg-white rounded-lg shadow-md overflow-hidden">
             <summary class="cursor-pointer bg-blue-400 text-white p-4 flex justify-between items-center">
-              <span>QnA</span>
+              <span>주문관리</span>
               <!-- Arrow icon -->
               <svg class="w-4 h-4 transform transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
               </svg>
             </summary>
             <div class="p-4 space-y-2 text-gray-700">
-              <p>기능관련 문의 보기</p>
-              <p>매장관련 문의 보기</p>
-              <p>기타 문의 보기</p>
+              <p>주문목록</p>
             </div>
           </details>
         </li>
         <li>
           <details class="w-64 bg-white rounded-lg shadow-md overflow-hidden">
             <summary class="cursor-pointer bg-blue-400 text-white p-4 flex justify-between items-center">
-              <span>기능 관리</span>
+              <span>상품관리</span>
               <!-- Arrow icon -->
               <svg class="w-4 h-4 transform transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
               </svg>
             </summary>
             <div class="p-4 space-y-2 text-gray-700">
-              <p>기능 관리</p>
+              <p>상품 목록</p>
+              <p>상품 등록</p>
+            </div>
+          </details>
+        </li>
+        <li>
+          <details class="w-64 bg-white rounded-lg shadow-md overflow-hidden">
+            <summary class="cursor-pointer bg-blue-400 text-white p-4 flex justify-between items-center">
+              <span>회원관리</span>
+              <!-- Arrow icon -->
+              <svg class="w-4 h-4 transform transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <div class="p-4 space-y-2 text-gray-700">
+              <p>회원 목록</p>
+            </div>
+          </details>
+        </li>
+        <li>
+          <details class="w-64 bg-white rounded-lg shadow-md overflow-hidden">
+            <summary class="cursor-pointer bg-blue-400 text-white p-4 flex justify-between items-center">
+              <span>재고관리</span>
+              <!-- Arrow icon -->
+              <svg class="w-4 h-4 transform transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <div class="p-4 space-y-2 text-gray-700">
+              <p>재고 목록</p>
+              <p>재고 등록</p>
+            </div>
+          </details>
+        </li>
+        <li>
+          <details class="w-64 bg-white rounded-lg shadow-md overflow-hidden">
+            <summary class="cursor-pointer bg-blue-400 text-white p-4 flex justify-between items-center">
+              <span>기능관리</span>
+              <!-- Arrow icon -->
+              <svg class="w-4 h-4 transform transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <div class="p-4 space-y-2 text-gray-700">
+              <p>매출 관리</p>
               <p>결제 관리</p>
               <p>카테고리 관리</p>
+            </div>
+          </details>
+        </li>
+        <li>
+          <details class="w-64 bg-white rounded-lg shadow-md overflow-hidden">
+            <summary class="cursor-pointer bg-blue-400 text-white p-4 flex justify-between items-center">
+              <span>문의사항</span>
+              <!-- Arrow icon -->
+              <svg class="w-4 h-4 transform transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <div class="p-4 space-y-2 text-gray-700">
+              <p>QnA</p>
+              <p>FAQ</p>
+              <p>환불</p>
             </div>
           </details>
         </li>
@@ -129,8 +161,7 @@ import HelloWorld from './components/HelloWorld.vue'
     <!-- Main content area -->
     <div class="flex-grow p-4">
       <!-- Your main content goes here -->
-      <h1 class="text-xl font-bold">Main Content Area</h1>
-      <p>여기에 메인 콘텐츠가 들어갑니다.</p>
+      <RouterView />
     </div>
   </div>
 </template>
