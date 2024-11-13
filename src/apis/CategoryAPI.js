@@ -2,17 +2,28 @@ import axios from "axios";
 
 const host = 'http://localhost:8080/api/v1/category';
 
-// 등록
-export const postAddCategory = async (obj) => {
+// 리스트
+export const getListCategory = async (page, searchParams = {}) => {
+    const { keyword, type } = searchParams;
 
-    const formData = new FormData();
-    formData.append('name', obj.name);
-
-    const res = await axios.post(`${host}/add`, formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data' // form-data 형식 명시
-        }
+    const res = await axios.get(`${host}/list`, {
+        params: {
+            page: page,
+            size: 10,
+            keyword: keyword || null,
+            type: type || null
+        },
     });
 
-    return res.data; // 서버에서 반환된 응답 데이터
+    return res.data;
+};
+
+// 등록
+export const postAddCategory = async (obj) => {
+    const res = await axios.post(`${host}/add`, obj, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    return res.data;
 };

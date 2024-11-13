@@ -6,18 +6,42 @@
       <label for="name" class="block text-sm font-medium text-gray-700">이름</label>
       <input v-model="name" id="name" type="text" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
     </div>
-    <button @click="addCategory" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-200">카테고리 등록</button>
+    <button @click="moveToList" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-200">
+      목록
+    </button>
+    <button @click="addCategory" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-200">
+      등록
+    </button>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import { postAddCategory } from '../../apis/CategoryAPI.js';
-import { useRoute } from 'vue-router';
+import { usePage } from '../../store/usePage';
+import { useCategorySearch } from '../../store/useCategorySearch.js';
+import { useRouter } from 'vue-router';
 import Swal from 'sweetalert2'; // SweetAlert2 가져오기
 
-const route = useRoute();
+const pageStore = usePage();
+const searchStore = useCategorySearch();
+const router = useRouter();
 const name = ref('');
+
+const addToList = () => {
+  router.push({ path: '/category/list', query: { page: 1 } });
+};
+
+const moveToList = () => {
+  const currentPage = pageStore.currentPage;
+  const searchParams = {
+    type: searchStore.type,
+    keyword: searchStore.keyword,
+  };
+
+  router.push({ path: `/category/list`, query: { page: currentPage, ...searchParams } });
+};
+
 
 const addCategory = async () => {
   if (name.value.trim() === '') {
@@ -42,6 +66,7 @@ const addCategory = async () => {
     }).then(() => {
       name.value = '';
     });
+    addToList();
   } catch (error) {
     console.error('카테고리 등록 실패:', error);
     Swal.fire({

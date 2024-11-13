@@ -137,7 +137,7 @@ import { RouterLink } from 'vue-router'
             <div class="p-4 space-y-2 text-gray-700">
               <p>매출 관리</p>
               <p>결제 관리</p>
-              <p><RouterLink to="/category/add">카테고리</RouterLink></p>
+              <p><RouterLink to="/category/list">카테고리</RouterLink></p>
             </div>
           </details>
         </li>
