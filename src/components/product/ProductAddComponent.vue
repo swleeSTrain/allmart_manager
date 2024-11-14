@@ -3,9 +3,9 @@
 </script>
 
 <template>
-  <h2>Product List Component</h2>
+  <h2>Product Add Component</h2>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 
 </style>

@@ -1,5 +1,7 @@
 <script setup>
 
+import { RouterLink } from 'vue-router'
+
 </script>
 
 <template>
@@ -89,8 +91,8 @@
               </svg>
             </summary>
             <div class="p-4 space-y-2 text-gray-700">
-              <p>상품 목록</p>
-              <p>상품 등록</p>
+              <p><RouterLink to="/product/list">상품목록</RouterLink></p>
+              <p><RouterLink to="/product/add">상품등록</RouterLink></p>
             </div>
           </details>
         </li>
@@ -135,7 +137,7 @@
             <div class="p-4 space-y-2 text-gray-700">
               <p>매출 관리</p>
               <p>결제 관리</p>
-              <p>카테고리 관리</p>
+              <p><RouterLink to="/category/list">카테고리</RouterLink></p>
             </div>
           </details>
         </li>
