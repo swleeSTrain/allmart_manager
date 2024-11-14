@@ -2,8 +2,10 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { usePage } from '../store/usePage';
 import { useCategorySearch } from '../store/useCategorySearch.js';
+import Swal from 'sweetalert2';
+import {deleteCategory} from "../apis/CategoryAPI.js";
 
-const useQnaListData = (listFn) => {
+const useCategoryListData = (listFn) => {
     const fn = listFn;
     const route = useRoute();
     const router = useRouter();
@@ -100,8 +102,7 @@ const useQnaListData = (listFn) => {
         loadPageData(route.query.page || 1);
     });
 
-    // 수정된 moveToRead 함수
-    const moveToRead = (qno) => {
+    const moveToEdit = (categoryID) => {
 
         const query = {
             page: currentPage.value,
@@ -112,10 +113,10 @@ const useQnaListData = (listFn) => {
         };
 
         router.push({
-            path: `/category/read/${qno}`,
+            path: `/category/edit/${categoryID}`,
             query
         });
-    };
+    }
 
     const moveToAdd = () => {
 
@@ -152,11 +153,43 @@ const useQnaListData = (listFn) => {
         await loadPageData(1);
     };
 
+    const handleDelete = async (categoryID) => {
+
+        Swal.fire({
+            title: '정말 삭제하시겠습니까?',
+            text: '삭제하면 복구할 수 없습니다!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '삭제',
+            cancelButtonText: '취소'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    await deleteCategory(categoryID);
+                    Swal.fire({
+                        icon: 'success',
+                        title: '삭제 완료!',
+                        text: '성공적으로 삭제되었습니다.'
+                    });
+                    cleanAndLoad();
+                } catch (error) {
+                    console.error('Failed to delete question:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: '오류 발생',
+                        text: '삭제하는 도중 오류가 발생했습니다.'
+                    });
+                }
+            }
+        });
+    };
+
     return {
-        loading, moveToRead, route, router, refresh,
-        result, pageArr, loadPageData, searchParams,
-        search, onEnterKey, cleanAndLoad, moveToAdd
+        loading, route, router, refresh, result,
+        pageArr, loadPageData, searchParams, search,
+        onEnterKey, cleanAndLoad, moveToAdd, handleDelete,
+        moveToEdit
     };
 };
 
-export default useQnaListData;
+export default useCategoryListData;

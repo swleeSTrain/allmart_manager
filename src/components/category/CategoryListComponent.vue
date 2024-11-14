@@ -21,7 +21,7 @@
         Clean
       </button>
       <!-- 등록 버튼 -->
-      <button @click="moveToAdd" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none ml-2">
+      <button @click="openAddModal" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
         등록
       </button>
     </div>
@@ -35,15 +35,33 @@
     <ul class="divide-y divide-gray-300">
       <li v-for="category in result.dtoList"
           :key="category.categoryID"
-          class="py-4 cursor-pointer hover:bg-gray-100 flex items-center justify-between"
-          @click="moveToRead(category.categoryID)">
+          class="py-4 cursor-pointer hover:bg-gray-100 flex items-center justify-between">
+
         <div class="flex items-center space-x-4">
           <span class="font-medium text-lg">{{ category.categoryID }}</span>
           <span class="text-gray-400">|</span>
           <span class="font-medium text-lg">{{ category.name }}</span>
         </div>
+
+        <!-- 수정 및 삭제 버튼 -->
+        <div class="flex space-x-2">
+          <button
+              @click="openEditModal(category.id)"
+              class="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">
+            수정
+          </button>
+          <button
+              type="button"
+              @click="handleDelete(category.categoryID)"
+              class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+          >
+            삭제
+          </button>
+        </div>
+
       </li>
     </ul>
+
 
     <!-- 페이징 처리 -->
     <nav class="mt-6 flex justify-center">
@@ -58,15 +76,20 @@
         </li>
       </ul>
     </nav>
+
+
+
+
   </div>
 </template>
 
 <script setup>
-import useListData from '../../hooks/useCategoryListData.js';
+import useCategoryListData from '../../hooks/useCategoryListData.js';
 import { getListCategory } from '../../apis/CategoryAPI.js';
 
-const { result, pageArr, loadPageData, moveToRead,
-  searchParams, search, onEnterKey, cleanAndLoad, moveToAdd
-} = useListData(getListCategory);
+const { result, pageArr, loadPageData, handleDelete,
+  searchParams, search, onEnterKey, cleanAndLoad, moveToAdd,
+    moveToEdit
+} = useCategoryListData(getListCategory);
 
 </script>
