@@ -153,6 +153,11 @@ const useCategoryListData = (listFn) => {
         await loadPageData(1);
     };
 
+    const editAndLoad = async () => {
+
+        await loadPageData(currentPage.value);
+    };
+
     const handleDelete = async (categoryID) => {
 
         Swal.fire({
@@ -188,7 +193,7 @@ const useCategoryListData = (listFn) => {
         loading, route, router, refresh, result,
         pageArr, loadPageData, searchParams, search,
         onEnterKey, cleanAndLoad, moveToAdd, handleDelete,
-        moveToEdit
+        moveToEdit, editAndLoad
     };
 };
 
