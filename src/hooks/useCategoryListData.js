@@ -112,7 +112,7 @@ const useQnaListData = (listFn) => {
         };
 
         router.push({
-            path: `/qna/question/read/${qno}`,
+            path: `/category/read/${qno}`,
             query
         });
     };

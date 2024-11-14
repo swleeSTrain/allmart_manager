@@ -3,7 +3,7 @@
     <h2 class="text-2xl font-bold mb-4">Category List Component</h2>
 
     <!-- 검색 필드 -->
-    <div class="flex items-center space-x-2 mb-4">
+    <div class="flex justify-end items-center space-x-2 mb-4">
       <select v-model="searchParams.type" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
         <option value="name">이름</option>
       </select>
