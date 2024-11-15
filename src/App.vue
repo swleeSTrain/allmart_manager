@@ -77,7 +77,7 @@ import { RouterLink } from 'vue-router'
               </svg>
             </summary>
             <div class="p-4 space-y-2 text-gray-700">
-              <p>주문목록</p>
+              <p><RouterLink to="/order/list">주문관리</RouterLink></p>
             </div>
           </details>
         </li>
