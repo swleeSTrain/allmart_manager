@@ -6,7 +6,8 @@ import { RouterLink } from 'vue-router'
 
 <template>
   <!-- 헤더 시작 -->
-  <header class="flex justify-between items-center p-4 border-b border-gray-300">
+
+  <header class="sticky top-0 z-50 bg-white flex justify-between items-center p-4 border-b border-gray-300 ">
     <!-- 왼쪽 로고 및 상호명 -->
     <div class="flex items-center space-x-4">
 
@@ -37,7 +38,7 @@ import { RouterLink } from 'vue-router'
 
       <!-- 사용자 아이콘과 이름 -->
       <a href="#" class="flex items-center space-x-1">
-        <svg class="w-10 h-10 transform transition-transform duration-300"c xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="{1.5}" stroke="currentColor">
+        <svg class="w-10 h-10 transform transition-transform duration-300 " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="{1.5}" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z" />
         </svg>
 
@@ -49,7 +50,7 @@ import { RouterLink } from 'vue-router'
     </div>
   </header>
   <div class="flex">
-    <div class="min-h-screen max-h-fit w-fit bg-blue-200 p-4">
+    <div class=" min-h-screen max-h-fit w-fit bg-blue-200 p-4">
       <ul class="space-y-2">
         <li>
           <details class="w-64 bg-white rounded-lg shadow-md overflow-hidden">
@@ -120,7 +121,7 @@ import { RouterLink } from 'vue-router'
               </svg>
             </summary>
             <div class="p-4 space-y-2 text-gray-700">
-              <p>재고 목록</p>
+              <p><RouterLink to="/inventories/list">재고 목록</RouterLink></p>
               <p>재고 등록</p>
             </div>
           </details>
@@ -161,7 +162,7 @@ import { RouterLink } from 'vue-router'
     </div>
 
     <!-- Main content area -->
-    <div class="flex-grow p-4">
+    <div class="p-4 relative h-full w-full overflow-y-auto">
       <!-- Your main content goes here -->
       <RouterView />
     </div>
