@@ -120,7 +120,7 @@ import { RouterLink } from 'vue-router'
               </svg>
             </summary>
             <div class="p-4 space-y-2 text-gray-700">
-              <p>재고 목록</p>
+              <p><RouterLink to="/inventories/list">재고 목록</RouterLink></p>
               <p>재고 등록</p>
             </div>
           </details>
