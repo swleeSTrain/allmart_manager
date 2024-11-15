@@ -96,7 +96,7 @@ const { result, pageArr, loadPageData, searchParams, search, onEnterKey, cleanAn
             {{ page.label }}
           </button>
         </li>
-      </ul>
+      </ul> 
     </nav>
   </div>
 </template>
