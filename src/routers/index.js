@@ -1,6 +1,7 @@
 import {createRouter, createWebHistory} from "vue-router";
 import productRouting from "./product.js";
 import categoryRouting from "./category.js";
+import orderRouting from "./order.js";
 
 const MainPage = () => import("../pages/MainPage.vue")
 
@@ -10,7 +11,8 @@ const routeConfig = createRouter({
     routes: [
         {path: "/", component: MainPage},
         productRouting,
-        categoryRouting
+        categoryRouting,
+        orderRouting
     ]
 })
 
