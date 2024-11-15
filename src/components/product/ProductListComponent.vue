@@ -30,6 +30,9 @@
       검색 결과가 없습니다.
     </div>
 
+    <!-- 카테고리 컴포넌트  -->
+    <ProductCategoryComponent />
+
     <!-- 질문 리스트 -->
     <ul class="divide-y divide-gray-300">
       <li v-for="product in result.dtoList"
@@ -77,6 +80,7 @@
 <script setup>
 import useListData from '../../hooks/useProductListData.js';
 import { getListProduct } from '../../apis/ProductAPI.js';
+import ProductCategoryComponent from "./ProductCategoryComponent.vue";
 
 const { result, pageArr, loadPageData, moveToRead,
   searchParams, search, onEnterKey, cleanAndLoad,

@@ -66,6 +66,23 @@ const useCategoryListData = (listFn) => {
         });
     };
 
+    const loadCategoryPage = async (page) => {
+        // 이미 로딩 중이거나 다음 페이지가 없으면 중단
+        if (loading.value || !result.value.next) {
+            return;
+        }
+
+        loading.value = true;
+
+        try {
+            const data = await fn(page, { keyword: null }); // 검색 관련 매개변수 제거
+            result.value.dtoList = [...result.value.dtoList, ...data.dtoList];
+            result.value.next = data.next; // 다음 페이지 유무 업데이트
+        } finally {
+            loading.value = false;
+        }
+    };
+
 
     const pageArr = computed(() => {
         const currentPageValue = result.value.current;
@@ -193,7 +210,7 @@ const useCategoryListData = (listFn) => {
         loading, route, router, refresh, result,
         pageArr, loadPageData, searchParams, search,
         onEnterKey, cleanAndLoad, moveToAdd, handleDelete,
-        moveToEdit, editAndLoad
+        moveToEdit, editAndLoad, loadCategoryPage
     };
 };
 
