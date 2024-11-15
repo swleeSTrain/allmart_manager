@@ -18,3 +18,38 @@ export const getListProduct = async (page, searchParams = {}) => {
 
     return res.data;
 };
+
+// 조회
+export const getReadProduct = async (productID) => {
+
+    const res = await axios.get(`${host}/${productID}`)
+
+    console.log(res.data);
+
+    return res.data
+}
+
+// 등록
+export const postAddProduct = async (formData) => {
+
+    try {
+        const res = await axios.post(`${host}/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+
+        return res.data;
+    } catch (error) {
+        console.error('Error posting question:', error);
+        throw error;
+    }
+};
+
+// 삭제
+export const deleteProduct = async (productID) => {
+
+    const res = await axios.delete(`${host}/${productID}`)
+
+    return res.data
+}

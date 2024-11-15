@@ -11,7 +11,7 @@ export const useCategorySearch = defineStore('search', () => {
     };
 
     const clean = () => {
-        type.value = 'all';
+        type.value = 'name';
         keyword.value = '';
     };
 
