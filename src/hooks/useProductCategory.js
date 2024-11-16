@@ -28,7 +28,6 @@ const useProductCategory = (fetchCategoriesFn) => {
 
     const handleCategoryClick = (categoryID) => {
         selectedCategoryID.value = categoryID;
-        console.log('선택된 카테고리:', categoryID);
     };
 
     // 스크롤 관련 상태

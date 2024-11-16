@@ -1,63 +1,80 @@
 <template>
-  <div class="max-w-2xl mx-auto p-6 bg-gray-50 rounded-lg shadow-md">
-    <h1 class="text-2xl font-bold mb-4">Product Read Component</h1>
+  <div class="max-w-4xl mx-auto p-8 bg-white rounded-lg shadow-lg">
 
-    <!-- LIST 버튼 -->
-    <div class="mb-4">
-      <button
-          class="px-4 py-2 text-sm text-white bg-green-600 rounded hover:bg-green-700 transition duration-200"
-          @click="moveToList()"
-      >
-        LIST
-      </button>
-    </div>
+    <h1 class="text-3xl font-extrabold text-gray-800 mb-6 border-b pb-2">Product Read Component</h1>
 
-    <!-- EDIT 버튼 -->
-    <div class="mb-4">
-      <button
-          class="px-4 py-2 text-sm text-white bg-green-600 rounded hover:bg-green-700 transition duration-200"
-          @click="moveToEdit(product.productID)"
-      >
-        EDIT
-      </button>
-    </div>
+    <div v-if="product" class="space-y-4">
 
-    <!-- 제품 상세 정보 -->
-    <div v-if="product">
-      <h2 class="text-xl font-semibold mb-2">이름: {{ product.name }}</h2>
-      <p class="text-sm text-gray-600">SKU: {{ product.sku }}</p>
-      <p class="text-sm text-gray-600">가격: {{ product.price }}</p>
-      <p class="text-sm text-gray-600">등록일: {{ product.createdDate }}</p>
-      <p class="text-sm text-gray-600">수정일: {{ product.modifiedDate }}</p>
-
-      <!-- 첨부 이미지 -->
-      <div class="mt-4">
+      <div class="mt-6">
         <div v-if="product.attachFiles && product.attachFiles.length > 0">
-          <h3 class="font-medium mt-4">첨부 이미지:</h3>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             <img
                 v-for="(file, index) in product.attachFiles"
                 :key="index"
                 :src="`http://localhost:8080/uploads/${file}`"
                 alt="첨부 이미지"
-                class="w-full h-auto border border-gray-300 rounded-md shadow-sm"
+                class="w-full h-40 object-cover rounded-lg shadow-md border border-gray-200"
             />
           </div>
         </div>
       </div>
+
+      <table class="min-w-full table-auto border-separate border-spacing-4">
+        <tbody>
+        <tr>
+          <td class="text-left font-semibold text-gray-700 border-b-2 border-r-2 border-gray-400">이름</td>
+          <td class="text-xl text-black-600 border-b-2 border-gray-400">{{ product.name }}</td>
+        </tr>
+        <tr>
+          <td class="text-left font-semibold text-gray-700 border-b-2 border-r-2 border-gray-400">SKU</td>
+          <td class="text-xl text-black-600 border-b-2 border-gray-400">{{ product.sku }}</td>
+        </tr>
+        <tr>
+          <td class="text-left font-semibold text-gray-700 border-b-2 border-r-2 border-gray-400">가격</td>
+          <td class="text-xl text-black-600 border-b-2 border-gray-400">{{ product.price }}</td>
+        </tr>
+        <tr>
+          <td class="text-left font-semibold text-gray-700 border-b-2 border-r-2 border-gray-400">등록일</td>
+          <td class="text-lg text-black-500 border-b-2 border-gray-400">{{ formatDate(product.createdDate) }}</td>
+        </tr>
+        <tr>
+          <td class="text-left font-semibold text-gray-700 border-b-2 border-r-2 border-gray-400">수정일</td>
+          <td class="text-lg text-black-500 border-b-2 border-gray-400">{{ formatDate(product.modifiedDate) }}</td>
+        </tr>
+        </tbody>
+      </table>
+      
+    </div>
+
+    <div class="mt-8 flex justify-center space-x-4">
+      <button
+          class="px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition"
+          @click="moveToList"
+      >
+        목록
+      </button>
+      <button
+          class="px-6 py-2 bg-orange-500 text-white font-semibold rounded-lg shadow-md hover:bg-orange-600 transition"
+          @click="moveToEdit(product.productID)"
+      >
+        수정
+      </button>
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { getReadProduct } from '../../apis/ProductAPI.js';
+import useDateFormatter from '../../hooks/useDateFormatter.js'
 
 const route = useRoute();  // 현재 라우트 정보 가져오기
 const router = useRouter(); // 라우터 인스턴스
-
 const product = ref(null);
+
+const { formatDate } = useDateFormatter();
 
 // LIST 이동
 const moveToList = () => {
