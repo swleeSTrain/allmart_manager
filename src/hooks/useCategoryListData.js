@@ -1,9 +1,7 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { usePage } from '../store/usePage';
+import { useCategoryPage } from '../store/useCategoryPage';
 import { useCategorySearch } from '../store/useCategorySearch.js';
-import Swal from 'sweetalert2';
-import {deleteCategory} from "../apis/CategoryAPI.js";
 
 const useCategoryListData = (listFn) => {
     const fn = listFn;
@@ -12,9 +10,10 @@ const useCategoryListData = (listFn) => {
     const loading = ref(false);
     const refresh = ref(false);
 
-    const pageStore = usePage();
+    // 새로 만든 useCategoryPage 스토어 사용
+    const categoryPageStore = useCategoryPage();
     const searchStore = useCategorySearch();
-    const currentPage = computed(() => pageStore.currentPage);
+    const currentPage = computed(() => categoryPageStore.currentPage);
 
     const searchParams = ref({
         type: 'name',
@@ -35,8 +34,8 @@ const useCategoryListData = (listFn) => {
         next: false
     });
 
+    // 페이지 데이터 로드
     const loadPageData = async (page) => {
-
         loading.value = true;
 
         const apiSearchParams = {
@@ -48,7 +47,8 @@ const useCategoryListData = (listFn) => {
         result.value = data;
         loading.value = false;
 
-        pageStore.setCurrentPage(page);
+        // 페이지 상태 업데이트
+        categoryPageStore.setCurrentPage(page);
         searchStore.setSearchParams(searchParams.value.type, searchParams.value.keyword);
 
         // 항상 검색 조건 포함
@@ -75,7 +75,7 @@ const useCategoryListData = (listFn) => {
         loading.value = true;
 
         try {
-            const data = await fn(page, { keyword: null }); // 검색 관련 매개변수 제거
+            const data = await fn(page, { keyword: null });
             result.value.dtoList = [...result.value.dtoList, ...data.dtoList];
             result.value.next = data.next; // 다음 페이지 유무 업데이트
         } finally {
@@ -83,33 +83,8 @@ const useCategoryListData = (listFn) => {
         }
     };
 
-
-    const pageArr = computed(() => {
-        const currentPageValue = result.value.current;
-        let lastPage = Math.ceil(currentPageValue / 10.0) * 10;
-        const start = lastPage - 9;
-        const prev = result.value.prev;
-        const next = result.value.next;
-
-        const pageArr = [];
-
-        if (prev) {
-            pageArr.push({ page: start - 1, label: 'PREV' });
-        }
-
-        result.value.pageNumList.forEach(page => {
-            pageArr.push({ page, label: page });
-        });
-
-        if (next) {
-            pageArr.push({ page: lastPage + 1, label: 'NEXT' });
-        }
-
-        return pageArr;
-    });
-
     onMounted(() => {
-        const page = route.query.page ? parseInt(route.query.page, 10) : pageStore.currentPage;
+        const page = route.query.page ? parseInt(route.query.page, 10) : categoryPageStore.currentPage;
         searchParams.value.type = route.query.type || 'name';
         searchParams.value.keyword = route.query.keyword || searchStore.keyword || '';
         loadPageData(page);
@@ -119,99 +94,7 @@ const useCategoryListData = (listFn) => {
         loadPageData(route.query.page || 1);
     });
 
-    const moveToEdit = (categoryID) => {
-
-        const query = {
-            page: currentPage.value,
-            ...(searchParams.value.keyword && {
-                type: searchParams.value.type,
-                keyword: searchParams.value.keyword
-            })
-        };
-
-        router.push({
-            path: `/category/edit/${categoryID}`,
-            query
-        });
-    }
-
-    const moveToAdd = () => {
-
-        const query = {
-            page: currentPage.value,
-            ...(searchParams.value.keyword && {
-                type: searchParams.value.type,
-                keyword: searchParams.value.keyword
-            })
-        };
-
-        router.push({
-            path: `/category/add`,
-            query
-        });
-    }
-
-    const search = () => {
-        searchStore.setSearchParams(searchParams.value.type, searchParams.value.keyword);
-        loadPageData(1, true);
-    };
-
-    const onEnterKey = (event) => {
-        if (event.key === 'Enter') {
-            search();
-        }
-    };
-
-    const cleanAndLoad = async () => {
-        pageStore.clean();
-        searchStore.clean();
-
-        searchParams.value.keyword = searchStore.keyword;
-        await loadPageData(1);
-    };
-
-    const editAndLoad = async () => {
-
-        await loadPageData(currentPage.value);
-    };
-
-    const handleDelete = async (categoryID) => {
-
-        Swal.fire({
-            title: '정말 삭제하시겠습니까?',
-            text: '삭제하면 복구할 수 없습니다!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: '삭제',
-            cancelButtonText: '취소'
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    await deleteCategory(categoryID);
-                    Swal.fire({
-                        icon: 'success',
-                        title: '삭제 완료!',
-                        text: '성공적으로 삭제되었습니다.'
-                    });
-                    cleanAndLoad();
-                } catch (error) {
-                    console.error('Failed to delete question:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: '오류 발생',
-                        text: '삭제하는 도중 오류가 발생했습니다.'
-                    });
-                }
-            }
-        });
-    };
-
-    return {
-        loading, route, router, refresh, result,
-        pageArr, loadPageData, searchParams, search,
-        onEnterKey, cleanAndLoad, moveToAdd, handleDelete,
-        moveToEdit, editAndLoad, loadCategoryPage
-    };
+    return { loading, result, loadCategoryPage, loadPageData, searchParams };
 };
 
 export default useCategoryListData;
