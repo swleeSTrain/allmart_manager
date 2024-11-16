@@ -1,7 +1,5 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { usePage } from '../store/usePage';
-import { useProductSearch } from '../store/useProductSearch.js';
 
 const useProductListData = (listFn) => {
     const fn = listFn;
@@ -10,13 +8,11 @@ const useProductListData = (listFn) => {
     const loading = ref(false);
     const refresh = ref(false);
 
-    const pageStore = usePage();
-    const searchStore = useProductSearch();
-    const currentPage = computed(() => pageStore.currentPage);
+    const currentPage = ref(parseInt(route.query.page, 10) || 1);
 
     const searchParams = ref({
-        type: searchStore.type || 'all',
-        keyword: searchStore.keyword || ''
+        type: route.query.type || 'all',
+        keyword: route.query.keyword || ''
     });
 
     const result = ref({
@@ -46,10 +42,8 @@ const useProductListData = (listFn) => {
         result.value = data;
         loading.value = false;
 
-        pageStore.setCurrentPage(page);
-        searchStore.setSearchParams(searchParams.value.type, searchParams.value.keyword);
+        currentPage.value = page;
 
-        // keyword가 있을 때만 검색 파라미터 추가
         const query = {
             page,
             ...(searchParams.value.keyword && {
@@ -89,21 +83,19 @@ const useProductListData = (listFn) => {
     });
 
     onMounted(() => {
-
-        const page = route.query.page ? parseInt(route.query.page, 10) : pageStore.currentPage;
+        const page = parseInt(route.query.page, 10) || currentPage.value;
         searchParams.value.type = route.query.type || 'all';
-        searchParams.value.keyword = route.query.keyword || searchStore.keyword || '';
+        searchParams.value.keyword = route.query.keyword || '';
 
         loadPageData(page);
     });
 
     watch(refresh, () => {
-        loadPageData(route.query.page || 1);
+        loadPageData(currentPage.value);
     });
 
     const search = () => {
-        searchStore.setSearchParams(searchParams.value.type, searchParams.value.keyword);
-        loadPageData(1, true);
+        loadPageData(1);
     };
 
     const onEnterKey = (event) => {
@@ -113,21 +105,18 @@ const useProductListData = (listFn) => {
     };
 
     const cleanAndLoad = async () => {
-        pageStore.clean();
-        searchStore.clean();
-
-        searchParams.value.keyword = searchStore.keyword;
+        searchParams.value.type = 'all';
+        searchParams.value.keyword = '';
+        currentPage.value = 1;
         await loadPageData(1);
     };
 
-    // 상세 페이지로 이동
     const moveToRead = (productID) => {
-        // 현재 페이지는 항상 유지하고, 검색 조건은 keyword가 있을 때만 포함
         const query = {
             page: currentPage.value,
-            ...(searchStore.keyword && {
-                type: searchStore.type,
-                keyword: searchStore.keyword
+            ...(searchParams.value.keyword && {
+                type: searchParams.value.type,
+                keyword: searchParams.value.keyword
             })
         };
 
@@ -137,11 +126,25 @@ const useProductListData = (listFn) => {
         });
     };
 
+    const moveToAdd = () => {
+        const query = {
+            page: currentPage.value,
+            ...(searchParams.value.keyword && {
+                type: searchParams.value.type,
+                keyword: searchParams.value.keyword
+            })
+        };
+
+        router.push({
+            path: `/product/add`,
+            query
+        });
+    };
 
     return {
         loading, route, router, refresh, result,
         pageArr, loadPageData, searchParams, search,
-        onEnterKey, cleanAndLoad, moveToRead
+        onEnterKey, cleanAndLoad, moveToRead, moveToAdd
     };
 };
 

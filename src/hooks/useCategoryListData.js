@@ -1,9 +1,7 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { usePage } from '../store/usePage';
-import { useCategorySearch } from '../store/useCategorySearch.js';
 import Swal from 'sweetalert2';
-import {deleteCategory} from "../apis/CategoryAPI.js";
+import { deleteCategory } from '../apis/CategoryAPI.js';
 
 const useCategoryListData = (listFn) => {
     const fn = listFn;
@@ -12,14 +10,12 @@ const useCategoryListData = (listFn) => {
     const loading = ref(false);
     const refresh = ref(false);
 
-    const pageStore = usePage();
-    const searchStore = useCategorySearch();
-    const currentPage = computed(() => pageStore.currentPage);
-
     const searchParams = ref({
-        type: 'name',
-        keyword: searchStore.keyword || ''
+        type: route.query.type || 'name',
+        keyword: route.query.keyword || ''
     });
+
+    const currentPage = ref(parseInt(route.query.page, 10) || 1);
 
     const result = ref({
         dtoList: [],
@@ -36,7 +32,6 @@ const useCategoryListData = (listFn) => {
     });
 
     const loadPageData = async (page) => {
-
         loading.value = true;
 
         const apiSearchParams = {
@@ -48,8 +43,7 @@ const useCategoryListData = (listFn) => {
         result.value = data;
         loading.value = false;
 
-        pageStore.setCurrentPage(page);
-        searchStore.setSearchParams(searchParams.value.type, searchParams.value.keyword);
+        currentPage.value = page;
 
         // 항상 검색 조건 포함
         const query = {
@@ -65,7 +59,6 @@ const useCategoryListData = (listFn) => {
             query
         });
     };
-
 
     const pageArr = computed(() => {
         const currentPageValue = result.value.current;
@@ -92,9 +85,9 @@ const useCategoryListData = (listFn) => {
     });
 
     onMounted(() => {
-        const page = route.query.page ? parseInt(route.query.page, 10) : pageStore.currentPage;
+        const page = parseInt(route.query.page, 10) || 1;
         searchParams.value.type = route.query.type || 'name';
-        searchParams.value.keyword = route.query.keyword || searchStore.keyword || '';
+        searchParams.value.keyword = route.query.keyword || '';
         loadPageData(page);
     });
 
@@ -103,7 +96,6 @@ const useCategoryListData = (listFn) => {
     });
 
     const moveToEdit = (categoryID) => {
-
         const query = {
             page: currentPage.value,
             ...(searchParams.value.keyword && {
@@ -116,10 +108,9 @@ const useCategoryListData = (listFn) => {
             path: `/category/edit/${categoryID}`,
             query
         });
-    }
+    };
 
     const moveToAdd = () => {
-
         const query = {
             page: currentPage.value,
             ...(searchParams.value.keyword && {
@@ -132,11 +123,10 @@ const useCategoryListData = (listFn) => {
             path: `/category/add`,
             query
         });
-    }
+    };
 
     const search = () => {
-        searchStore.setSearchParams(searchParams.value.type, searchParams.value.keyword);
-        loadPageData(1, true);
+        loadPageData(1);
     };
 
     const onEnterKey = (event) => {
@@ -146,20 +136,17 @@ const useCategoryListData = (listFn) => {
     };
 
     const cleanAndLoad = async () => {
-        pageStore.clean();
-        searchStore.clean();
-
-        searchParams.value.keyword = searchStore.keyword;
+        searchParams.value.type = 'name';
+        searchParams.value.keyword = '';
+        currentPage.value = 1;
         await loadPageData(1);
     };
 
     const editAndLoad = async () => {
-
         await loadPageData(currentPage.value);
     };
 
     const handleDelete = async (categoryID) => {
-
         Swal.fire({
             title: '정말 삭제하시겠습니까?',
             text: '삭제하면 복구할 수 없습니다!',
@@ -178,7 +165,7 @@ const useCategoryListData = (listFn) => {
                     });
                     cleanAndLoad();
                 } catch (error) {
-                    console.error('Failed to delete question:', error);
+                    console.error('Failed to delete category:', error);
                     Swal.fire({
                         icon: 'error',
                         title: '오류 발생',
