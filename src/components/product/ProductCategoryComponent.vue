@@ -39,7 +39,9 @@ const selectedCategoryID = ref(null);
 
 // 카테고리 클릭 핸들러
 const handleCategoryClick = (categoryID) => {
+
   selectedCategoryID.value = categoryID;
+
   console.log('Selected Category:', categoryID);
 };
 
@@ -54,12 +56,14 @@ const handleMouseDown = (e) => {
   startX = e.pageX - scrollContainer.value.offsetLeft;
   scrollLeft = scrollContainer.value.scrollLeft;
 };
+
 const handleMouseMove = (e) => {
   if (!isDragging) return;
   const x = e.pageX - scrollContainer.value.offsetLeft;
   const walk = (x - startX) * 2; // 스크롤 속도 조정
   scrollContainer.value.scrollLeft = scrollLeft - walk;
 };
+
 const handleMouseUp = () => (isDragging = false);
 
 // 스크롤 끝 감지 및 페이지 로드

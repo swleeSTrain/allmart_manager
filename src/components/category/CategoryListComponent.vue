@@ -26,11 +26,6 @@
       </button>
     </div>
 
-    <!-- 검색 결과가 없을 때 메시지 -->
-    <div v-if="result.dtoList.length === 0" class="flex items-center h-20 text-2xl text-gray-500 mb-4 ml-1">
-      검색 결과가 없습니다.
-    </div>
-
     <!-- 카테고리 리스트 -->
     <table class="table-auto w-full border-collapse border border-gray-300">
       <!-- 테이블 헤더 -->
@@ -71,6 +66,10 @@
       </tbody>
     </table>
 
+    <!-- 검색 결과가 없을 때 메시지 -->
+    <div v-if="result.dtoList.length === 0" class="flex items-center h-20 text-2xl text-gray-500 mb-4 ml-1">
+      검색 결과가 없습니다.
+    </div>
 
     <!-- 페이징 처리 -->
     <nav class="mt-6 flex justify-center">
