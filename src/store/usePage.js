@@ -2,7 +2,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-export const usePage = defineStore('page', () => {
+const usePage = defineStore('page', () => {
     const currentPage = ref(1)
 
     const setCurrentPage = (page) => {
@@ -16,4 +16,4 @@ export const usePage = defineStore('page', () => {
     return { currentPage, setCurrentPage, clean };
 })
 
-export default usePage
+export default usePage;

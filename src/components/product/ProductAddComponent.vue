@@ -98,15 +98,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { postAddProduct } from '../../apis/ProductAPI.js';
-import { usePage } from '../../store/usePage.js'
-import { useProductSearch } from '../../store/useProductSearch.js'
-import { useRouter } from 'vue-router';
+import {ref} from 'vue';
+import {useRoute, useRouter} from 'vue-router';
+import {postAddProduct} from '../../apis/ProductAPI.js';
 import Swal from 'sweetalert2';
 
-const searchStore = useProductSearch();
-const pageStore = usePage();
+const route = useRoute();
 const router = useRouter();
 
 // 폼 데이터
@@ -114,7 +111,7 @@ const form = ref({
   name: '',
   sku: '',
   price: '',
-  tags: [] // 배열로 초기화하여 다중 선택 가능
+  tags: [], // 배열로 초기화하여 다중 선택 가능
 });
 
 // 에러 메시지
@@ -155,7 +152,16 @@ const handleSubmit = async () => {
       title: '작성 완료 !!!',
       text: '질문이 성공적으로 등록되었습니다.',
     }).then(() => {
-      router.push("/qna/question/list");
+      const query = {
+        page: route.query.page || 1,
+        ...(route.query.keyword && {keyword: route.query.keyword}),
+        ...(route.query.type && {type: route.query.type}),
+      };
+
+      router.push({
+        path: '/product/list',
+        query
+      });
     });
 
   } catch (error) {
@@ -171,12 +177,15 @@ const handleSubmit = async () => {
 
 // 목록으로 이동
 const moveToList = () => {
-  const currentPage = pageStore.currentPage;
-  const searchParams = {
-    type: searchStore.type,
-    keyword: searchStore.keyword,
+  const query = {
+    page: route.query.page || 1,
+    ...(route.query.keyword && {keyword: route.query.keyword}),
+    ...(route.query.type && {type: route.query.type}),
   };
 
-  router.push({path: `/product/list`, query: {page: currentPage, ...searchParams}});
+  router.push({
+    path: '/product/list',
+    query
+  });
 };
 </script>

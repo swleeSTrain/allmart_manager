@@ -24,8 +24,6 @@ export const getReadProduct = async (productID) => {
 
     const res = await axios.get(`${host}/${productID}`)
 
-    console.log(res.data);
-
     return res.data
 }
 

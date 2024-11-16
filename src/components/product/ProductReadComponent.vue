@@ -2,29 +2,35 @@
   <div class="max-w-2xl mx-auto p-6 bg-gray-50 rounded-lg shadow-md">
     <h1 class="text-2xl font-bold mb-4">Product Read Component</h1>
 
+    <!-- LIST 버튼 -->
     <div class="mb-4">
       <button
           class="px-4 py-2 text-sm text-white bg-green-600 rounded hover:bg-green-700 transition duration-200"
-          @click="moveToList()">
+          @click="moveToList()"
+      >
         LIST
       </button>
     </div>
 
+    <!-- EDIT 버튼 -->
     <div class="mb-4">
       <button
           class="px-4 py-2 text-sm text-white bg-green-600 rounded hover:bg-green-700 transition duration-200"
-          @click="moveToEdit(product.productID)">
+          @click="moveToEdit(product.productID)"
+      >
         EDIT
       </button>
     </div>
 
+    <!-- 제품 상세 정보 -->
     <div v-if="product">
       <h2 class="text-xl font-semibold mb-2">이름: {{ product.name }}</h2>
-      <p class="text-sm text-gray-600">sku: {{ product.sku }}</p>
+      <p class="text-sm text-gray-600">SKU: {{ product.sku }}</p>
       <p class="text-sm text-gray-600">가격: {{ product.price }}</p>
       <p class="text-sm text-gray-600">등록일: {{ product.createdDate }}</p>
       <p class="text-sm text-gray-600">수정일: {{ product.modifiedDate }}</p>
 
+      <!-- 첨부 이미지 -->
       <div class="mt-4">
         <div v-if="product.attachFiles && product.attachFiles.length > 0">
           <h3 class="font-medium mt-4">첨부 이미지:</h3>
@@ -39,74 +45,53 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
-
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { getReadProduct } from '../../apis/ProductAPI.js';
-import { usePage } from '../../store/usePage';
-import { useProductSearch } from '../../store/useProductSearch.js';
 
-const pageStore = usePage();
-const searchStore = useProductSearch();
-const route = useRoute();
-const router = useRouter();
+const route = useRoute();  // 현재 라우트 정보 가져오기
+const router = useRouter(); // 라우터 인스턴스
+
 const product = ref(null);
 
-const moveToEdit = (productID) => {
-
-  const currentPage = pageStore.currentPage;
-  const query = {
-    page: currentPage.value,
-    ...(searchStore.keyword && {
-      type: searchStore.type,
-      keyword: searchStore.keyword
-    })
-  };
-
+// LIST 이동
+const moveToList = () => {
+  // 페이지네이션 쿼리 파라미터와 검색 파라미터를 URL에 전달
   router.push({
-    path: `/product/edit/${productID}`,
-    query
+    path: '/product/list',
+    query: {page: route.query.page, ...route.query},
   });
 };
 
-const moveToList = () => {
-  // 페이지와 검색 조건을 가져와서 쿼리스트링을 유지
-  const currentPage = pageStore.currentPage;
-  const searchParams = {
-    type: searchStore.type,
-    keyword: searchStore.keyword,
-  };
-
-  router.push({ path: `/product/list/`, query: { page: currentPage, ...searchParams } });
+// EDIT 이동
+const moveToEdit = (productID) => {
+  // 편집 페이지로 이동하면서 쿼리 파라미터를 함께 전달
+  router.push({
+    path: `/product/edit/${productID}`,
+    query: {page: route.query.page, ...route.query},
+  });
 };
 
+// 컴포넌트 로드 시 API 호출
 onMounted(async () => {
+  const productID = route.params.productID; // URL에서 productID 가져오기
+  console.log('Received productID from route:', productID);
+
+  if (!productID) {
+    console.error('Missing productID in URL');
+    return;
+  }
 
   try {
-    const productID = route.params.productID;
     const data = await getReadProduct(productID);
-
-    // 객체 데이터를 그대로 할당
     product.value = data;
-
-    // 쿼리스트링에서 페이지와 검색 조건 가져와 Pinia 상태로 저장
-    const page = route.query.page ? parseInt(route.query.page, 10) : pageStore.currentPage;
-    const type = route.query.type || searchStore.type || 'all';
-    const keyword = route.query.keyword || searchStore.keyword || '';
-
-    pageStore.setCurrentPage(page);
-    searchStore.setSearchParams(type, keyword);
-
   } catch (error) {
     console.error('Failed to fetch product details:', error);
   }
 });
-
-
 </script>

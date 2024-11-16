@@ -3,7 +3,7 @@
     <h2 class="text-2xl font-bold mb-4">Category List Component</h2>
 
     <!-- 검색 필드 -->
-    <div class="flex justify-end items-center space-x-2 mb-4">
+    <div class="flex flex-wrap justify-end items-center gap-2 mb-4">
       <select v-model="searchParams.type" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
         <option value="name">이름</option>
       </select>
@@ -72,8 +72,8 @@
     </div>
 
     <!-- 페이징 처리 -->
-    <nav class="mt-6 flex justify-center">
-      <ul class="inline-flex items-center space-x-2">
+    <nav class="mt-6 flex justify-center flex-wrap gap-2">
+      <ul class="flex items-center flex-wrap gap-2">
         <li v-for="page in pageArr" :key="page.page">
           <button
               class="px-5 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -81,7 +81,8 @@
           'bg-blue-500 text-white': page.page === result.pageRequestDTO.page,
           'bg-gray-200 text-gray-700 hover:bg-gray-300': page.page !== result.pageRequestDTO.page
         }"
-              @click="loadPageData(page.page)">
+              @click="loadPageData(page.page)"
+          >
             {{ page.label }}
           </button>
         </li>
