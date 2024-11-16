@@ -32,33 +32,56 @@
     </div>
 
     <!-- 카테고리 리스트 -->
-    <ul class="divide-y divide-gray-300">
-      <li v-for="category in result.dtoList" :key="category.categoryID" class="py-4 cursor-pointer hover:bg-gray-100 flex items-center justify-between">
-        <div class="flex items-center space-x-4">
-          <span class="font-medium text-lg">{{ category.categoryID }}</span>
-          <span class="text-gray-400">|</span>
-          <span class="font-medium text-lg">{{ category.name }}</span>
-        </div>
-
-        <!-- 수정 및 삭제 버튼 -->
-        <div class="flex space-x-2">
-          <button @click="openEditModal(category.categoryID)" class="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">
+    <table class="table-auto w-full border-collapse border border-gray-300">
+      <!-- 테이블 헤더 -->
+      <thead class="bg-gray-200">
+      <tr>
+        <th class="border border-gray-300 px-4 py-4 text-left">카테고리 ID</th>
+        <th class="border border-gray-300 px-4 py-4 text-left">카테고리명</th>
+        <th class="border border-gray-300 px-4 py-4 text-left">수정</th>
+        <th class="border border-gray-300 px-4 py-4 text-left">삭제</th>
+      </tr>
+      </thead>
+      <!-- 테이블 본문 -->
+      <tbody>
+      <tr
+          v-for="category in result.dtoList"
+          :key="category.categoryID"
+          class="hover:bg-gray-100 cursor-pointer"
+      >
+        <td class="border border-gray-300 px-4 py-4">{{ category.categoryID }}</td>
+        <td class="border border-gray-300 px-4 py-4">{{ category.name }}</td>
+        <td class="border border-gray-300 px-4 py-4 text-center">
+          <button
+              @click="openEditModal(category.categoryID)"
+              class="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600"
+          >
             수정
           </button>
-          <button @click="handleDelete(category.categoryID)" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+        </td>
+        <td class="border border-gray-300 px-4 py-4 text-center">
+          <button
+              @click="handleDelete(category.categoryID)"
+              class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+          >
             삭제
           </button>
-        </div>
-      </li>
-    </ul>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
 
     <!-- 페이징 처리 -->
     <nav class="mt-6 flex justify-center">
-      <ul class="inline-flex items-center space-x-1">
+      <ul class="inline-flex items-center space-x-2">
         <li v-for="page in pageArr" :key="page.page">
           <button
-              class="px-3 py-1 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              :class="{ 'bg-blue-500 text-white': page.page === result.pageRequestDTO.page, 'bg-gray-200 text-gray-700': page.page !== result.pageRequestDTO.page }"
+              class="px-5 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              :class="{
+          'bg-blue-500 text-white': page.page === result.pageRequestDTO.page,
+          'bg-gray-200 text-gray-700 hover:bg-gray-300': page.page !== result.pageRequestDTO.page
+        }"
               @click="loadPageData(page.page)">
             {{ page.label }}
           </button>

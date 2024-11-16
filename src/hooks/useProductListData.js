@@ -1,6 +1,6 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { usePage } from '../store/usePage';
+import { useProductPage } from '../store/useProductPage'; // 변경된 스토어로 교체
 import { useProductSearch } from '../store/useProductSearch.js';
 
 const useProductListData = (listFn) => {
@@ -10,7 +10,7 @@ const useProductListData = (listFn) => {
     const loading = ref(false);
     const refresh = ref(false);
 
-    const pageStore = usePage();
+    const pageStore = useProductPage(); // 교체된 스토어 사용
     const searchStore = useProductSearch();
     const currentPage = computed(() => pageStore.currentPage);
 
@@ -46,10 +46,10 @@ const useProductListData = (listFn) => {
         result.value = data;
         loading.value = false;
 
-        pageStore.setCurrentPage(page);
+        pageStore.setCurrentPage(page); // `useProductPage`의 setCurrentPage 호출
         searchStore.setSearchParams(searchParams.value.type, searchParams.value.keyword);
 
-        // keyword가 있을 때만 검색 파라미터 추가
+        // 검색 조건이 있을 때만 쿼리 매개변수 포함
         const query = {
             page,
             ...(searchParams.value.keyword && {
@@ -89,7 +89,6 @@ const useProductListData = (listFn) => {
     });
 
     onMounted(() => {
-
         const page = route.query.page ? parseInt(route.query.page, 10) : pageStore.currentPage;
         searchParams.value.type = route.query.type || 'all';
         searchParams.value.keyword = route.query.keyword || searchStore.keyword || '';
@@ -113,7 +112,7 @@ const useProductListData = (listFn) => {
     };
 
     const cleanAndLoad = async () => {
-        pageStore.clean();
+        pageStore.clean(); // `useProductPage`의 clean 호출
         searchStore.clean();
 
         searchParams.value.keyword = searchStore.keyword;
@@ -137,11 +136,27 @@ const useProductListData = (listFn) => {
         });
     };
 
+    // 등록 페이지로 이동
+    const moveToAdd = () => {
+        // 현재 페이지는 항상 유지하고, 검색 조건은 keyword가 있을 때만 포함
+        const query = {
+            page: currentPage.value,
+            ...(searchStore.keyword && {
+                type: searchStore.type,
+                keyword: searchStore.keyword
+            })
+        };
+
+        router.push({
+            path: `/product/add`,
+            query
+        });
+    };
 
     return {
         loading, route, router, refresh, result,
         pageArr, loadPageData, searchParams, search,
-        onEnterKey, cleanAndLoad, moveToRead
+        onEnterKey, cleanAndLoad, moveToRead, moveToAdd
     };
 };
 

@@ -3,6 +3,7 @@
     <h1 class="text-2xl font-bold mb-4 text-center">Product Add Component</h1>
 
     <form @submit.prevent="handleSubmit" enctype="multipart/form-data">
+      <!-- 이름 입력 -->
       <div class="mb-4">
         <label for="name" class="block text-sm font-medium text-gray-700">이름</label>
         <input
@@ -14,6 +15,7 @@
         />
       </div>
 
+      <!-- 고유번호 입력 -->
       <div class="mb-4">
         <label for="sku" class="block text-sm font-medium text-gray-700">고유번호</label>
         <input
@@ -25,6 +27,7 @@
         />
       </div>
 
+      <!-- 가격 입력 -->
       <div class="mb-4">
         <label for="price" class="block text-sm font-medium text-gray-700">가격</label>
         <input
@@ -36,6 +39,7 @@
         />
       </div>
 
+      <!-- 카테고리 -->
       <div class="mb-4">
         <label class="block text-sm font-medium text-gray-700">카테고리</label>
         <div class="mt-1 flex space-x-4">
@@ -61,6 +65,7 @@
         <p v-if="errorMessage" class="text-red-500 text-sm mt-1">{{ errorMessage }}</p>
       </div>
 
+      <!-- 파일 입력 -->
       <div class="mb-4">
         <label for="files" class="block text-sm font-medium text-gray-700">Files</label>
         <input
@@ -72,25 +77,39 @@
         />
       </div>
 
-      <button
-          type="submit"
-          class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 w-full"
-      >
-        등록
-      </button>
+      <div class="flex justify-center space-x-2 mt-4">
+        <button
+            type="button"
+            @click="moveToList"
+            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          목록
+        </button>
+
+        <button
+            type="submit"
+            class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+        >
+          등록
+        </button>
+      </div>
     </form>
   </div>
 </template>
 
 <script setup>
-import {ref} from 'vue';
-import {postAddProduct} from '../../apis/ProductAPI.js';
-import {useRouter} from 'vue-router';
+import { ref } from 'vue';
+import { postAddProduct } from '../../apis/ProductAPI.js';
+import { usePage } from '../../store/usePage.js'
+import { useProductSearch } from '../../store/useProductSearch.js'
+import { useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
 
+const searchStore = useProductSearch();
+const pageStore = usePage();
 const router = useRouter();
 
-// Form 데이터를 저장할 객체
+// 폼 데이터
 const form = ref({
   name: '',
   sku: '',
@@ -98,17 +117,17 @@ const form = ref({
   tags: [] // 배열로 초기화하여 다중 선택 가능
 });
 
-// 에러 메시지를 저장할 변수
+// 에러 메시지
 const errorMessage = ref('');
 
-// 파일 입력을 참조하는 변수
+// 파일 입력 참조
 const fileInput = ref(null);
 
+// 태그 선택 유효성 검사 및 제출 처리
 const handleSubmit = async () => {
-  // 태그 선택 유효성 검사
   if (form.value.tags.length === 0) {
-    errorMessage.value = "태그를 선택해야 합니다."; // 에러 메시지 설정
-    return; // 제출을 중단
+    errorMessage.value = "태그를 선택해야 합니다.";
+    return;
   }
 
   const formData = new FormData();
@@ -116,12 +135,10 @@ const handleSubmit = async () => {
   formData.append('sku', form.value.sku);
   formData.append('price', form.value.price);
 
-  // 선택된 tags 배열을 반복문으로 추가
   form.value.tags.forEach(tag => {
     formData.append('tags', tag);
   });
 
-  // 선택한 파일 추가
   const files = fileInput.value.files;
   if (files) {
     for (let i = 0; i < files.length; i++) {
@@ -133,13 +150,12 @@ const handleSubmit = async () => {
     const response = await postAddProduct(formData);
     console.log('Product added:', response);
 
-    // 성공 알림 표시 후 리다이렉트
     Swal.fire({
       icon: 'success',
       title: '작성 완료 !!!',
       text: '질문이 성공적으로 등록되었습니다.',
     }).then(() => {
-      router.push("/qna/question/list"); // 등록 완료 후 질문 목록으로 리다이렉트
+      router.push("/qna/question/list");
     });
 
   } catch (error) {
@@ -151,5 +167,16 @@ const handleSubmit = async () => {
       text: '질문을 등록하는 도중 오류가 발생했습니다.',
     });
   }
+};
+
+// 목록으로 이동
+const moveToList = () => {
+  const currentPage = pageStore.currentPage;
+  const searchParams = {
+    type: searchStore.type,
+    keyword: searchStore.keyword,
+  };
+
+  router.push({path: `/product/list`, query: {page: currentPage, ...searchParams}});
 };
 </script>

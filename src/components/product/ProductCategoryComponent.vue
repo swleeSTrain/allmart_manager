@@ -9,7 +9,12 @@
           v-for="category in result.dtoList"
           :key="category.categoryID"
           @click="handleCategoryClick(category.categoryID)"
-          class="px-4 py-2 bg-blue-200 text-blue-700 rounded cursor-pointer hover:bg-blue-300 whitespace-nowrap"
+          :class="[
+          'px-4 py-2 rounded cursor-pointer whitespace-nowrap',
+          category.categoryID === selectedCategoryID
+            ? 'bg-blue-500 text-white'  // 클릭된 카테고리 색상
+            : 'bg-blue-100 text-black-700 hover:bg-blue-300'  // 기본 색상
+        ]"
       >
         {{ category.name }}
       </div>
@@ -29,80 +34,66 @@ const { result, loading, loadCategoryPage } = useCategoryListData(getListCategor
 const scrollContainer = ref(null);
 const currentPage = ref(1);
 
+// 선택된 카테고리 ID
+const selectedCategoryID = ref(null);
+
 // 카테고리 클릭 핸들러
 const handleCategoryClick = (categoryID) => {
-  console.log(categoryID);
+  selectedCategoryID.value = categoryID;
+  console.log('Selected Category:', categoryID);
 };
 
-// 가로 스크롤 감지 및 페이지 로드
+// 스크롤 및 드래그 관련 상태
+let isDragging = false;
+let startX = 0;
+let scrollLeft = 0;
+
+// 마우스 이벤트 핸들러
+const handleMouseDown = (e) => {
+  isDragging = true;
+  startX = e.pageX - scrollContainer.value.offsetLeft;
+  scrollLeft = scrollContainer.value.scrollLeft;
+};
+const handleMouseMove = (e) => {
+  if (!isDragging) return;
+  const x = e.pageX - scrollContainer.value.offsetLeft;
+  const walk = (x - startX) * 2; // 스크롤 속도 조정
+  scrollContainer.value.scrollLeft = scrollLeft - walk;
+};
+const handleMouseUp = () => (isDragging = false);
+
+// 스크롤 끝 감지 및 페이지 로드
 const handleScroll = async () => {
-  if (!scrollContainer.value || loading.value) return;
+  if (loading.value) return;
 
   const container = scrollContainer.value;
-  const scrollRight = container.scrollLeft + container.clientWidth;
-  const scrollWidth = container.scrollWidth;
+  const nearEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 10;
 
-  // 스크롤이 끝에 도달했는지 확인
-  if (scrollRight >= scrollWidth - 10) {
+  if (nearEnd) {
     currentPage.value += 1;
     await loadCategoryPage(currentPage.value);
   }
 };
 
-// 마우스 클릭과 드래그로 스크롤 구현
-let isMouseDown = false;
-let startX;
-let scrollLeft;
-
-const handleMouseDown = (e) => {
-  isMouseDown = true;
-  startX = e.pageX - scrollContainer.value.offsetLeft;
-  scrollLeft = scrollContainer.value.scrollLeft;
-};
-
-const handleMouseLeave = () => {
-  isMouseDown = false;
-};
-
-const handleMouseUp = () => {
-  isMouseDown = false;
-};
-
-const handleMouseMove = (e) => {
-  if (!isMouseDown) return;
-  const x = e.pageX - scrollContainer.value.offsetLeft;
-  const walk = (x - startX) * 3; // 3은 드래그 속도 조절
-  scrollContainer.value.scrollLeft = scrollLeft - walk;
-};
-
-// 스크롤 이벤트 초기화
+// 이벤트 등록 및 해제
 onMounted(async () => {
   await loadCategoryPage(1);
 
   const container = scrollContainer.value;
-
-  // 스크롤 이벤트 리스너 등록
   container.addEventListener('scroll', handleScroll);
-
-  // 마우스 이벤트 리스너 등록
   container.addEventListener('mousedown', handleMouseDown);
-  container.addEventListener('mouseleave', handleMouseLeave);
-  container.addEventListener('mouseup', handleMouseUp);
   container.addEventListener('mousemove', handleMouseMove);
+  container.addEventListener('mouseup', handleMouseUp);
+  container.addEventListener('mouseleave', handleMouseUp);
 });
 
-// 컴포넌트 언마운트 시 이벤트 제거
 onBeforeUnmount(() => {
   const container = scrollContainer.value;
-
-  // 스크롤 이벤트 리스너 제거
   container.removeEventListener('scroll', handleScroll);
-
-  // 마우스 이벤트 리스너 제거
   container.removeEventListener('mousedown', handleMouseDown);
-  container.removeEventListener('mouseleave', handleMouseLeave);
-  container.removeEventListener('mouseup', handleMouseUp);
   container.removeEventListener('mousemove', handleMouseMove);
+  container.removeEventListener('mouseup', handleMouseUp);
+  container.removeEventListener('mouseleave', handleMouseUp);
 });
 </script>
 
@@ -113,7 +104,6 @@ onBeforeUnmount(() => {
   scrollbar-width: thin;
 }
 
-/* Chrome, Safari, Edge에서 스크롤바 스타일링 */
 .scrollbar-visible::-webkit-scrollbar {
   height: 8px;
 }
