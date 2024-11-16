@@ -30,7 +30,7 @@ import { getListCategory } from '../../apis/CategoryAPI.js';
 
 const {
   result, loading, selectedCategoryID, scrollContainer,
-  handleCategoryClick, loadCategoryPage,
+  handleCategoryClick
 } = useProductCategory(getListCategory);
 
 </script>

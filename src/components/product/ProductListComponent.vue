@@ -105,12 +105,12 @@
 </template>
 
 <script setup>
-import useListData from '../../hooks/useProductListData.js';
+import useProductListData from '../../hooks/useProductListData.js';
 import { getListProduct } from '../../apis/ProductAPI.js';
 import ProductCategoryComponent from "./ProductCategoryComponent.vue";
 
 const { result, pageArr, loadPageData, moveToRead,
   searchParams, search, onEnterKey, cleanAndLoad, moveToAdd
-  } = useListData(getListProduct);
+  } = useProductListData(getListProduct);
 
 </script>
