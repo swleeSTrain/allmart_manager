@@ -1,7 +1,7 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
 
-const useProductCategory = (listFn) => {
+const useProductCategory = (listFn, includeAll = true) => {
 
     const route = useRoute(); // 쿼리스트링 접근
 
@@ -17,23 +17,15 @@ const useProductCategory = (listFn) => {
 
     const loadCategoryPage = async (page) => {
 
-        console.log("======통과 1");
-
-        console.log(page);
-        console.log(loading.value);
-
         if (loading.value) return;
-
-        console.log("======통과 2");
 
         loading.value = true;
 
         try {
             const data = await listFn(page);
 
-            console.log("======통과 3");
-            // "전체" 항목 추가
-            if (page === 1) {
+            // "전체" 항목 추가, includeAll을 false로 호출하면 추가 안됨
+            if (page === 1 && includeAll) {
                 data.dtoList.unshift({ categoryID: null, name: '전체' });
             }
 

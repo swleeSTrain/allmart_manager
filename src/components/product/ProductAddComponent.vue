@@ -140,7 +140,7 @@ const selectedFiles = ref([]);
 
 const {
   result, scrollContainer, handleCategoryClick
-} = useProductCategory(getListCategory);
+} = useProductCategory(getListCategory, false);
 
 // 폼 데이터
 const form = ref({

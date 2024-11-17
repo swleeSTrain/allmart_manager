@@ -7,7 +7,7 @@
       <div class="mb-5">
         <label for="name" class="block text-lg font-bold text-gray-700 mb-2">이름</label>
         <input
-            v-model="product.name"
+            v-model="form.name"
             type="text"
             id="name"
             class="mt-1 block w-full h-12 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50"
@@ -19,7 +19,7 @@
       <div class="mb-5">
         <label for="sku" class="block text-lg font-bold text-gray-700 mb-2">고유번호</label>
         <input
-            v-model="product.sku"
+            v-model="form.sku"
             type="text"
             id="sku"
             class="mt-1 block w-full h-12 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50"
@@ -31,7 +31,7 @@
       <div class="mb-5">
         <label for="price" class="block text-lg font-bold text-gray-700 mb-2">가격</label>
         <input
-            v-model="product.price"
+            v-model="form.price"
             type="number"
             id="price"
             class="mt-1 block w-full h-12 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50"
@@ -51,7 +51,7 @@
           >
             <input
                 type="radio"
-                v-model="product.categoryID"
+                v-model="form.categoryID"
                 :value="category.categoryID"
                 class="form-radio"
             />
@@ -98,7 +98,9 @@
             </li>
           </ul>
         </div>
+
       </div>
+
 
       <div class="flex justify-center space-x-4 mt-6">
         <button
@@ -146,14 +148,15 @@ const product = ref(null);
 
 const {
   result, scrollContainer, handleCategoryClick
-} = useProductCategory(getListCategory);
+} = useProductCategory(getListCategory, false);
 
 // 폼 데이터
 const form = ref({
   name: '',
   sku: '',
   price: '',
-  categoryID: null, // 단일 선택
+  categoryID: null,
+  attachFiles: []
 });
 
 // 파일 선택 창 열기
@@ -188,14 +191,13 @@ const handleEdit = async () => {
   formData.append('price', form.value.price);
   formData.append('categoryID', form.value.categoryID);
 
-  console.log(form.value.categoryID);
-
   selectedFiles.value.forEach((file) => {
     formData.append('files', file);
   });
 
   try {
     const productID = route.params.productID;
+
     await putEditProduct(productID, formData);
 
     Swal.fire({
@@ -265,7 +267,8 @@ const moveToRead = (productID) => {
   router.push({
     path: `/product/read/${productID}`,
     query
-  });
+})
+  ;
 };
 
 const moveToList = () => {
@@ -294,6 +297,7 @@ onMounted(async () => {
     form.value.sku = product.value.sku || '';
     form.value.price = product.value.price || '';
     form.value.categoryID = product.value.categoryID || null;
+    form.value.attachFiles = product.value.attachFiles || [];
 
     // 카테고리 로드
     await getListCategory();

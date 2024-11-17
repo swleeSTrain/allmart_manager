@@ -102,7 +102,6 @@ const moveToEdit = (productID) => {
 // 컴포넌트 로드 시 API 호출
 onMounted(async () => {
   const productID = route.params.productID; // URL에서 productID 가져오기
-  console.log('Received productID from route:', productID);
 
   if (!productID) {
     console.error('Missing productID in URL');
@@ -113,11 +112,7 @@ onMounted(async () => {
     const data = await getReadProduct(productID);
     product.value = data;
 
-    console.log(product.value);
-
     const categoryResult = await getCategory(product.value.categoryID)
-
-    console.log(categoryResult.name);
 
     product.value.categoryName = categoryResult.name;
 
