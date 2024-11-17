@@ -26,12 +26,16 @@
           <td class="text-xl text-black-600 border-b-2 border-gray-400">{{ product.name }}</td>
         </tr>
         <tr>
-          <td class="text-left font-semibold text-gray-700 border-b-2 border-r-2 border-gray-400">SKU</td>
+          <td class="text-left font-semibold text-gray-700 border-b-2 border-r-2 border-gray-400">고유번호</td>
           <td class="text-xl text-black-600 border-b-2 border-gray-400">{{ product.sku }}</td>
         </tr>
         <tr>
           <td class="text-left font-semibold text-gray-700 border-b-2 border-r-2 border-gray-400">가격</td>
           <td class="text-xl text-black-600 border-b-2 border-gray-400">{{ product.price }}</td>
+        </tr>
+        <tr>
+          <td class="text-left font-semibold text-gray-700 border-b-2 border-r-2 border-gray-400">카테고리</td>
+          <td class="text-xl text-black-600 border-b-2 border-gray-400">{{ product.categoryName }}</td>
         </tr>
         <tr>
           <td class="text-left font-semibold text-gray-700 border-b-2 border-r-2 border-gray-400">등록일</td>
@@ -68,6 +72,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { getReadProduct } from '../../apis/ProductAPI.js';
+import { getCategory } from '../../apis/CategoryAPI.js'
 import useDateFormatter from '../../hooks/useDateFormatter.js'
 
 const route = useRoute();  // 현재 라우트 정보 가져오기
@@ -107,6 +112,15 @@ onMounted(async () => {
   try {
     const data = await getReadProduct(productID);
     product.value = data;
+
+    console.log(product.value);
+
+    const categoryResult = await getCategory(product.value.categoryID)
+
+    console.log(categoryResult.name);
+
+    product.value.categoryName = categoryResult.name;
+
   } catch (error) {
     console.error('Failed to fetch product details:', error);
   }

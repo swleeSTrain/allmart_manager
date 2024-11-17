@@ -163,7 +163,7 @@ const useCategoryListData = (listFn) => {
                         title: '삭제 완료!',
                         text: '성공적으로 삭제되었습니다.'
                     });
-                    cleanAndLoad();
+                    editAndLoad();
                 } catch (error) {
                     console.error('Failed to delete category:', error);
                     Swal.fire({
