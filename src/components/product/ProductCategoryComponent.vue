@@ -8,7 +8,7 @@
       <div
           v-for="category in result.dtoList"
           :key="category.categoryID"
-          @click="handleCategoryClick(category.categoryID)"
+          @click="onCategoryClick(category.categoryID)"
           :class="[
           'text-lg px-8 py-3 rounded cursor-pointer whitespace-nowrap inline-block',
           category.categoryID === selectedCategoryID
@@ -27,11 +27,21 @@
 <script setup>
 import useProductCategory from '../../hooks/useProductCategory.js';
 import { getListCategory } from '../../apis/CategoryAPI.js';
+import { defineEmits } from 'vue';
 
 const {
   result, loading, selectedCategoryID, scrollContainer,
   handleCategoryClick
 } = useProductCategory(getListCategory);
+
+const emit = defineEmits(['update:categoryID']); // 부모로 이벤트 전달
+
+const onCategoryClick = (categoryID) => {
+
+  handleCategoryClick(categoryID);
+
+  emit('update:categoryID', categoryID); // 부모로 이벤트 발생
+};
 
 </script>
 

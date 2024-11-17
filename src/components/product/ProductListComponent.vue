@@ -40,7 +40,7 @@
     </div>
 
     <!-- 카테고리 컴포넌트  -->
-    <ProductCategoryComponent />
+    <ProductCategoryComponent @update:categoryID="updateCategory" />
 
     <!-- 상품 리스트 -->
     <table class="table-auto w-full border-collapse border border-gray-300">
@@ -109,7 +109,7 @@ import useProductListData from '../../hooks/useProductListData.js';
 import { getListProduct } from '../../apis/ProductAPI.js';
 import ProductCategoryComponent from "./ProductCategoryComponent.vue";
 
-const { result, pageArr, loadPageData, moveToRead,
+const { result, pageArr, loadPageData, moveToRead, updateCategory,
   searchParams, search, onEnterKey, cleanAndLoad, moveToAdd
   } = useProductListData(getListProduct);
 

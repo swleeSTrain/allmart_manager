@@ -1,6 +1,10 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import { useRoute } from 'vue-router';
 
 const useProductCategory = (fetchCategoriesFn) => {
+
+    const route = useRoute(); // 쿼리스트링 접근
+
     const result = ref({
         dtoList: [],
         next: false,
@@ -8,16 +12,26 @@ const useProductCategory = (fetchCategoriesFn) => {
 
     const loading = ref(false);
     const currentPage = ref(1);
-    const selectedCategoryID = ref(null);
+    const selectedCategoryID = ref(Number(route.query.categoryID) || null);
 
     const loadCategoryPage = async (page) => {
-        if (loading.value || !result.value.next && page > 1) return;
+
+        if (loading.value || (!result.value.next && page > 1)) return;
 
         loading.value = true;
 
         try {
             const data = await fetchCategoriesFn(page, { keyword: null });
-            result.value.dtoList = page === 1 ? data.dtoList : [...result.value.dtoList, ...data.dtoList];
+
+            // "전체" 항목 추가
+            if (page === 1) {
+                data.dtoList.unshift({ categoryID: null, name: '전체' });
+            }
+
+            result.value.dtoList =
+                page === 1
+                    ? data.dtoList
+                    : [...result.value.dtoList, ...data.dtoList];
             result.value.next = data.next;
         } catch (error) {
             console.error('카테고리 로드 실패:', error);
@@ -26,9 +40,6 @@ const useProductCategory = (fetchCategoriesFn) => {
         }
     };
 
-    const handleCategoryClick = (categoryID) => {
-        selectedCategoryID.value = categoryID;
-    };
 
     // 스크롤 관련 상태
     const scrollContainer = ref(null);
@@ -64,24 +75,40 @@ const useProductCategory = (fetchCategoriesFn) => {
     };
 
     onMounted(async () => {
+
         await loadCategoryPage(1);
 
         const container = scrollContainer.value;
-        container.addEventListener('scroll', handleScroll);
-        container.addEventListener('mousedown', handleMouseDown);
-        container.addEventListener('mousemove', handleMouseMove);
-        container.addEventListener('mouseup', handleMouseUp);
-        container.addEventListener('mouseleave', handleMouseUp);
+
+        if(container) {
+
+            container.addEventListener('scroll', handleScroll);
+            container.addEventListener('mousedown', handleMouseDown);
+            container.addEventListener('mousemove', handleMouseMove);
+            container.addEventListener('mouseup', handleMouseUp);
+            container.addEventListener('mouseleave', handleMouseUp);
+        }
     });
 
     onBeforeUnmount(() => {
+
         const container = scrollContainer.value;
-        container.removeEventListener('scroll', handleScroll);
-        container.removeEventListener('mousedown', handleMouseDown);
-        container.removeEventListener('mousemove', handleMouseMove);
-        container.removeEventListener('mouseup', handleMouseUp);
-        container.removeEventListener('mouseleave', handleMouseUp);
+
+        if(container) {
+
+            container.removeEventListener('scroll', handleScroll);
+            container.removeEventListener('mousedown', handleMouseDown);
+            container.removeEventListener('mousemove', handleMouseMove);
+            container.removeEventListener('mouseup', handleMouseUp);
+            container.removeEventListener('mouseleave', handleMouseUp);
+        }
     });
+
+    const handleCategoryClick = (categoryID) => {
+
+        selectedCategoryID.value = categoryID;
+    };
+
 
     return {
         result, loading, selectedCategoryID, scrollContainer,
