@@ -174,6 +174,15 @@ const handleSubmit = async () => {
     return;
   }
 
+  if (selectedFiles.value.length === 0) {
+    Swal.fire({
+      icon: 'warning',
+      title: '이미지 첨부 필요',
+      text: '상품 이미지를 하나 이상 첨부해야 합니다.',
+    });
+    return; // 이미지를 추가하지 않으면 등록을 진행하지 않음
+  }
+
   const formData = new FormData();
   formData.append('name', form.value.name);
   formData.append('sku', form.value.sku);
