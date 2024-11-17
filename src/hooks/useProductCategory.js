@@ -1,28 +1,37 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
 
-const useProductCategory = (fetchCategoriesFn) => {
+const useProductCategory = (listFn) => {
 
     const route = useRoute(); // 쿼리스트링 접근
 
     const result = ref({
         dtoList: [],
-        next: false,
+        totalCount: 0,
     });
 
     const loading = ref(false);
     const currentPage = ref(1);
     const selectedCategoryID = ref(Number(route.query.categoryID) || null);
+    const lastPage = ref(1);
 
     const loadCategoryPage = async (page) => {
 
-        if (loading.value || (!result.value.next && page > 1)) return;
+        console.log("======통과 1");
+
+        console.log(page);
+        console.log(loading.value);
+
+        if (loading.value) return;
+
+        console.log("======통과 2");
 
         loading.value = true;
 
         try {
-            const data = await fetchCategoriesFn(page, { keyword: null });
+            const data = await listFn(page);
 
+            console.log("======통과 3");
             // "전체" 항목 추가
             if (page === 1) {
                 data.dtoList.unshift({ categoryID: null, name: '전체' });
@@ -32,7 +41,10 @@ const useProductCategory = (fetchCategoriesFn) => {
                 page === 1
                     ? data.dtoList
                     : [...result.value.dtoList, ...data.dtoList];
-            result.value.next = data.next;
+            result.value.totalCount = data.totalCount; // 값 띄우려면 여기 추가
+
+            lastPage.value = Math.ceil(result.value.totalCount / 10);
+
         } catch (error) {
             console.error('카테고리 로드 실패:', error);
         } finally {
@@ -70,7 +82,14 @@ const useProductCategory = (fetchCategoriesFn) => {
 
         if (nearEnd) {
             currentPage.value += 1;
-            await loadCategoryPage(currentPage.value);
+
+            if(lastPage.value >= currentPage.value) {
+
+                console.log("Last Page: " + lastPage.value);
+                console.log("Current Page: " + currentPage.value);
+
+                await loadCategoryPage(currentPage.value);
+            }
         }
     };
 
