@@ -12,7 +12,8 @@ const useProductListData = (listFn) => {
 
     const searchParams = ref({
         type: route.query.type || 'all',
-        keyword: route.query.keyword || ''
+        keyword: route.query.keyword || '',
+        categoryID: route.query.categoryID || null
     });
 
     const result = ref({
@@ -30,35 +31,31 @@ const useProductListData = (listFn) => {
     });
 
     const loadPageData = async (page) => {
-        loading.value = true;
 
         const apiSearchParams = {
             ...searchParams.value,
             type: searchParams.value.type === 'all' ? 'name&sku' : searchParams.value.type,
-            keyword: searchParams.value.keyword || null
+            keyword: searchParams.value.keyword || null,
+            categoryID: searchParams.value.categoryID
         };
 
         const data = await fn(page, apiSearchParams);
-        result.value = data;
-        loading.value = false;
 
+        result.value = data;
         currentPage.value = page;
 
         const query = {
             page,
-            ...(searchParams.value.keyword && {
-                type: searchParams.value.type,
-                keyword: searchParams.value.keyword
-            })
+            ...(searchParams.value.keyword ? { keyword: searchParams.value.keyword } : {}),
+            ...(searchParams.value.categoryID ? { categoryID: searchParams.value.categoryID } : {})
         };
 
-        router.replace({
-            path: route.path,
-            query
-        });
+        router.replace({ path: route.path, query });
     };
 
+
     const pageArr = computed(() => {
+
         const currentPageValue = result.value.current;
         let lastPage = Math.ceil(currentPageValue / 10.0) * 10;
         const start = lastPage - 9;
@@ -83,9 +80,14 @@ const useProductListData = (listFn) => {
     });
 
     onMounted(() => {
-        const page = parseInt(route.query.page, 10) || currentPage.value;
-        searchParams.value.type = route.query.type || 'all';
-        searchParams.value.keyword = route.query.keyword || '';
+
+        const page = parseInt(route.query.page, 10) || 1;
+
+        searchParams.value = {
+            type: route.query.type || 'all',
+            keyword: route.query.keyword || '',
+            categoryID: route.query.categoryID || null
+        };
 
         loadPageData(page);
     });
@@ -141,10 +143,25 @@ const useProductListData = (listFn) => {
         });
     };
 
+    const updateCategory = (categoryID) => {
+
+        // 다른 검색 조건 유지하면서 categoryID만 변경
+        searchParams.value = {
+            ...searchParams.value,
+            categoryID
+        };
+
+        console.log("Updated searchParams:", searchParams.value);
+
+        // 카테고리 변경 후 첫 페이지 로드
+        loadPageData(1);
+    };
+
     return {
         loading, route, router, refresh, result,
         pageArr, loadPageData, searchParams, search,
-        onEnterKey, cleanAndLoad, moveToRead, moveToAdd
+        onEnterKey, cleanAndLoad, moveToRead, moveToAdd,
+        updateCategory
     };
 };
 

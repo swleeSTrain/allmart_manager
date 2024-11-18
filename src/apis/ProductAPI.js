@@ -51,3 +51,21 @@ export const deleteProduct = async (productID) => {
 
     return res.data
 }
+
+// 수정
+export const putEditProduct = async (productID, formData) => {
+
+    try {
+
+        const res = await axios.put(`${host}/${productID}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+
+        return res.data;
+    } catch (error) {
+        console.error('Error during product update API call:', error);
+        throw error;
+    }
+};
