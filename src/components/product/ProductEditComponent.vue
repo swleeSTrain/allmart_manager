@@ -226,17 +226,19 @@ const handleEdit = async () => {
 
   // 파일 데이터 전송
   for (const file of selectedFiles.value) {
-    if (file.raw === 'existing') {
+    if(file.raw === 'existing') {
       // 기존 파일이면 fetch로 blob 가져와서 다시 File로 변환
       try {
+
         const response = await fetch(file.url);
         const blob = await response.blob();
         const existingFile = new File([blob], file.name, { type: blob.type });
+
         formData.append('files', existingFile);
       } catch (error) {
         console.error(`Failed to fetch existing file: ${file.name}`, error);
       }
-    } else if (file.raw) {
+    } else {
       // 새로 추가된 파일
       formData.append('files', file.raw);
     }
