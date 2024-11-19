@@ -17,3 +17,11 @@ export const getListOrder = async (page, searchParams = {}) => {
 
     return res.data;
 };
+
+// 조회
+export const getReadOrder = async (orderID) => {
+
+    const res = await axios.get(`${host}/${orderID}`)
+
+    return res.data
+}

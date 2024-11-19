@@ -121,10 +121,28 @@ const useOrderListData = (listFn) => {
         await loadPageData(1);
     };
 
+    const moveToRead = (orderID) => {
+
+        console.log(orderID);
+
+        const query = {
+            page: currentPage.value,
+            ...(searchParams.value.keyword && {
+                type: searchParams.value.type,
+                keyword: searchParams.value.keyword
+            })
+        };
+
+        router.push({
+            path: `/order/read/${orderID}`,
+            query
+        });
+    };
+
     return {
         loading, route, router, refresh,
         result, pageArr, loadPageData, searchParams,
-        search, onEnterKey, cleanAndLoad
+        search, onEnterKey, cleanAndLoad, moveToRead
     };
 };
 

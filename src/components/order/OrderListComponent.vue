@@ -1,10 +1,13 @@
 <script setup>
-import useListData from '../../hooks/useOrderListData.js';
+import useOrderListData from '../../hooks/useOrderListData.js';
 import { getListOrder } from '../../apis/OrderAPI.js';
+import useDateFormatter from '../../hooks/useDateFormatter.js';
 
-const { result, pageArr, loadPageData,
+const { formatDate } = useDateFormatter();
+
+const { result, pageArr, loadPageData, moveToRead,
   searchParams, search, onEnterKey, cleanAndLoad
-} = useListData(getListOrder);
+} = useOrderListData(getListOrder);
 </script>
 
 <template>
@@ -41,7 +44,6 @@ const { result, pageArr, loadPageData,
         <th class="border border-gray-300 px-4 py-4 text-left">주문상태</th>
         <th class="border border-gray-300 px-4 py-4 text-left">총가격</th>
         <th class="border border-gray-300 px-4 py-4 text-left">주문시간</th>
-        <th class="border border-gray-300 px-4 py-4 text-left">주문상품</th>
       </tr>
       </thead>
       <!-- 테이블 본문 -->
@@ -50,13 +52,13 @@ const { result, pageArr, loadPageData,
           v-for="order in result.dtoList"
           :key="order.orderId"
           class="hover:bg-gray-100 cursor-pointer"
+          @click="moveToRead(order.orderId)"
       >
         <td class="border border-gray-300 px-4 py-4">{{ order.orderId }}</td>
         <td class="border border-gray-300 px-4 py-4">{{ order.customerId }}</td>
         <td class="border border-gray-300 px-4 py-4">{{ order.status }}</td>
         <td class="border border-gray-300 px-4 py-4">{{ order.totalAmount }}원</td>
-        <td class="border border-gray-300 px-4 py-4">{{ order.orderTime }}</td>
-        <td class="border border-gray-300 px-4 py-4">{{ order.orderItems }}</td>
+        <td class="border border-gray-300 px-4 py-4">{{ formatDate(order.orderTime) }}</td>
       </tr>
       </tbody>
     </table>
