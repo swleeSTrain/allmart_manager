@@ -31,31 +31,41 @@ const { result, pageArr, loadPageData,
       </button>
     </div>
 
+    <!-- 주문 리스트 -->
+    <table class="table-auto w-full border-collapse border border-gray-300">
+      <!-- 테이블 헤더 -->
+      <thead class="bg-gray-200 text-lg">
+      <tr>
+        <th class="border border-gray-300 px-4 py-4 text-left">주문 ID</th>
+        <th class="border border-gray-300 px-4 py-4 text-left">고객 ID</th>
+        <th class="border border-gray-300 px-4 py-4 text-left">주문상태</th>
+        <th class="border border-gray-300 px-4 py-4 text-left">총가격</th>
+        <th class="border border-gray-300 px-4 py-4 text-left">주문시간</th>
+        <th class="border border-gray-300 px-4 py-4 text-left">주문상품</th>
+      </tr>
+      </thead>
+      <!-- 테이블 본문 -->
+      <tbody class="text-base">
+      <tr
+          v-for="order in result.dtoList"
+          :key="order.orderId"
+          class="hover:bg-gray-100 cursor-pointer"
+      >
+        <td class="border border-gray-300 px-4 py-4">{{ order.orderId }}</td>
+        <td class="border border-gray-300 px-4 py-4">{{ order.customerId }}</td>
+        <td class="border border-gray-300 px-4 py-4">{{ order.status }}</td>
+        <td class="border border-gray-300 px-4 py-4">{{ order.totalAmount }}원</td>
+        <td class="border border-gray-300 px-4 py-4">{{ order.orderTime }}</td>
+        <td class="border border-gray-300 px-4 py-4">{{ order.orderItems }}</td>
+      </tr>
+      </tbody>
+    </table>
+
     <!-- 검색 결과가 없을 때 메시지 -->
     <div v-if="result.dtoList.length === 0" class="flex items-center h-20 text-2xl text-gray-500 mb-4 ml-1">
       검색 결과가 없습니다.
     </div>
 
-    <!-- 카테고리 리스트 -->
-    <ul class="divide-y divide-gray-300">
-      <li v-for="order in result.dtoList"
-          :key="order.orderId"
-          class="py-4 cursor-pointer hover:bg-gray-100 flex items-center justify-between">
-        <div class="flex items-center space-x-4">
-          <span class="font-medium text-lg">{{ order.orderId}}</span>
-          <span class="text-gray-400">|</span>
-          <span class="font-medium text-lg">{{ order.customerId}}</span>
-          <span class="text-gray-400">|</span>
-          <span class="font-medium text-lg">{{ order.status}}</span>
-          <span class="text-gray-400">|</span>
-          <span class="font-medium text-lg">{{ order.totalAmount}}</span>
-          <span class="text-gray-400">|</span>
-          <span class="font-medium text-lg">{{ order.orderTime}}</span>
-          <span class="text-gray-400">|</span>
-          <span class="font-medium text-lg">{{ order.orderItems}}</span>
-        </div>
-      </li>
-    </ul>
 
     <!-- 페이징 처리 -->
     <nav class="mt-6 flex justify-center">
