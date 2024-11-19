@@ -115,7 +115,7 @@
         </button>
 
         <button
-            type="submit"
+            type="button"
             @click="handleEdit"
             class="px-6 py-3 bg-orange-500 text-white rounded hover:bg-orange-600 text-lg font-bold"
         >
@@ -123,7 +123,7 @@
         </button>
 
         <button
-            type="submit"
+            type="button"
             @click="handleDelete"
             class="px-6 py-3 bg-red-500 text-white rounded hover:bg-red-600 text-lg font-bold"
         >
@@ -224,24 +224,18 @@ const handleEdit = async () => {
   formData.append('price', form.value.price);
   formData.append('categoryID', form.value.categoryID);
 
-  // 파일 데이터 전송
   for (const file of selectedFiles.value) {
-    if(file.raw === 'existing') {
-      // 기존 파일이면 fetch로 blob 가져와서 다시 File로 변환
-      try {
-
-        const response = await fetch(file.url);
-        const blob = await response.blob();
-        const existingFile = new File([blob], file.name, { type: blob.type });
-
-        formData.append('files', existingFile);
-      } catch (error) {
-        console.error(`Failed to fetch existing file: ${file.name}`, error);
-      }
-    } else {
+    if (file.raw) {
       // 새로 추가된 파일
       formData.append('files', file.raw);
+    } else {
+      // 기존 파일의 이름만 전송
+      formData.append('existingFileNames', file.name);
     }
+  }
+
+  for (const [key, value] of formData.entries()) {
+    console.log(key, value);
   }
 
   try {
@@ -253,9 +247,9 @@ const handleEdit = async () => {
       icon: 'success',
       title: '수정 완료',
       text: '상품이 성공적으로 수정되었습니다.',
-    }).then(() => {
-      router.push({ path: `/product/read/${productID}` });
-    });
+    })
+    moveToRead(productID);
+
   } catch (error) {
     console.error('Failed to edit product:', error);
     Swal.fire({
@@ -267,6 +261,8 @@ const handleEdit = async () => {
 };
 
 const handleDelete = async () => {
+
+  console.log("===================== 삭제 삭제 =======================");
 
   const productID = route.params.productID;
 
@@ -349,19 +345,15 @@ onMounted(async () => {
     // 기존 파일 데이터를 새로운 파일 데이터 형식으로 변환
     selectedFiles.value = product.value.attachFiles.map((file) => {
       const fileName = file.split('/').pop(); // 경로에서 파일명만 추출
-      const shortName = fileName.slice(-8); // 뒤에서 8자리 추출
 
       return {
-        name: shortName,
-        url: `http://localhost:8080/uploads/${fileName}`, // 기존 파일 URL
-        raw: 'existing'
+        name: fileName, // 전체 파일명을 사용
+        raw: null // 기존 파일이므로 raw는 null
       };
     });
 
     console.log('Transformed Files:', selectedFiles.value);
 
-    // 카테고리 로드
-    await getListCategory();
   } catch (error) {
     console.error('Failed to load product data:', error);
   }
