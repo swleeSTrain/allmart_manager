@@ -4,7 +4,7 @@ const host = 'http://localhost:8080/api/v1/inventories';
 
 export const getInventoryList = async (page, searchParams = {}) => {
     try {
-        const res = await axios.get(host, {
+        const res = await axios.get(`${host}/list`, {
             params: {
                 page: page,
                 size: 10,

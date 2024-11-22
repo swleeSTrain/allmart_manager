@@ -45,31 +45,37 @@ const { result, pageArr, loadPageData, searchParams, search, onEnterKey, cleanAn
 
     <!-- 재고 리스트 -->
     <div v-if="result?.dtoList?.length > 0" class="overflow-x-auto">
-      <table class="w-full table-auto border-collapse border border-gray-200">
-        <thead class="bg-blue-500 text-white">
+      <table class="w-full table-auto border-collapse border border-gray-300">
+        <!-- 테이블 헤더 -->
+        <thead class="bg-gray-200">
         <tr>
-          <th class="px-6 py-3 border-b border-gray-200 text-left">SKU</th>
-          <th class="px-6 py-3 border-b border-gray-200 text-left">Quantity</th>
-          <th class="px-6 py-3 border-b border-gray-200 text-left">Status</th>
+          <th class="border border-gray-300 px-4 py-2 text-left">Product ID</th>
+          <th class="border border-gray-300 px-4 py-2 text-left">Product Name</th>
+          <th class="border border-gray-300 px-4 py-2 text-left">SKU</th>
+          <th class="border border-gray-300 px-4 py-2 text-left">Quantity</th>
+          <th class="border border-gray-300 px-4 py-2 text-left">Status</th>
         </tr>
         </thead>
+        <!-- 테이블 본문 -->
         <tbody>
         <tr
             v-for="inventory in result.dtoList"
             :key="inventory.inventoryID"
-            class="hover:bg-gray-50 transition-colors"
+            class="hover:bg-gray-100 cursor-pointer"
         >
-          <td class="px-6 py-4 border-b border-gray-200">{{ inventory.sku }}</td>
-          <td class="px-6 py-4 border-b border-gray-200">{{ inventory.quantity }}</td>
-          <td class="px-6 py-4 border-b border-gray-200">
-              <span
-                  :class="{
-                  'bg-green-100 text-green-700 px-2 py-1 rounded-lg': inventory.inStock,
-                  'bg-red-100 text-red-700 px-2 py-1 rounded-lg': !inventory.inStock,
-                }"
-              >
-                {{ inventory.inStock ? 'In Stock' : 'Out of Stock' }}
-              </span>
+          <td class="border border-gray-300 px-4 py-2">{{ inventory.inventoryID }}</td>
+          <td class="border border-gray-300 px-4 py-2">{{ inventory.productName }}</td>
+          <td class="border border-gray-300 px-4 py-2">{{ inventory.sku }}</td>
+          <td class="border border-gray-300 px-4 py-2">{{ inventory.quantity }}</td>
+          <td class="border border-gray-300 px-4 py-2">
+          <span
+              :class="{
+              'bg-green-100 text-green-700 px-2 py-1 rounded-lg': inventory.inStock,
+              'bg-red-100 text-red-700 px-2 py-1 rounded-lg': !inventory.inStock,
+            }"
+          >
+            {{ inventory.inStock ? 'In Stock' : 'Out of Stock' }}
+          </span>
           </td>
         </tr>
         </tbody>
