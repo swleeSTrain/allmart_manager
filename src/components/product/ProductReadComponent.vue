@@ -6,10 +6,10 @@
     <div v-if="product" class="space-y-4">
 
       <div class="mt-6">
-        <div v-if="product.attachFiles && product.attachFiles.length > 0">
+        <div v-if="product.attachImages && product.attachImages.length > 0">
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             <img
-                v-for="(file, index) in product.attachFiles"
+                v-for="(file, index) in product.attachImages"
                 :key="index"
                 :src="`http://localhost:8080/uploads/${file}`"
                 alt="첨부 이미지"

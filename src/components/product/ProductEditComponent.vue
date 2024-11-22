@@ -159,7 +159,7 @@ const form = ref({
   sku: '',
   price: '',
   categoryID: null,
-  attachFiles: []
+  attachImages: []
 });
 
 // 파일 선택 창 열기
@@ -343,7 +343,7 @@ onMounted(async () => {
     form.value.categoryID = product.value.categoryID || null;
 
     // 기존 파일 데이터를 새로운 파일 데이터 형식으로 변환
-    selectedFiles.value = product.value.attachFiles.map((file) => {
+    selectedFiles.value = product.value.attachImages.map((file) => {
       const fileName = file.split('/').pop(); // 경로에서 파일명만 추출
 
       return {
