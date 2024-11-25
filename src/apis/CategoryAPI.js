@@ -4,6 +4,7 @@ const host = 'http://localhost:8080/api/v1/category';
 
 // 리스트
 export const getListCategory = async (page, searchParams = {}) => {
+
     const { keyword, type } = searchParams;
 
     const res = await axios.get(`${host}/list`, {
