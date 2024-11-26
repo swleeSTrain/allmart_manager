@@ -44,13 +44,31 @@ const addCategory = async () => {
   try {
 
     await postAddCategory(categoryObj);
-    Swal.fire({icon: 'success', title: '등록 성공!', text: '카테고리가 등록되었습니다.'});
+    Swal.fire({
+      icon: 'success',
+      title: '등록 성공!',
+      text: '카테고리가 등록되었습니다.'
+    });
     emit('refreshList'); // 리스트 갱신 요청
     closeModal();
-
   } catch (error) {
     console.error(error);
-    Swal.fire({icon: 'error', title: '오류 발생', text: '등록 중 문제가 발생했습니다.'});
+    if (error.response && error.response.data) {
+
+      // 백엔드에서 보낸 구체적인 오류 메시지를 표시
+      Swal.fire({
+        icon: 'error',
+        title: '오류 발생',
+        text: error.response.data.message || '등록 중 문제가 발생했습니다.'
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: '오류 발생',
+        text: '등록 중 문제가 발생했습니다.'
+      });
+    }
   }
+
 };
 </script>
