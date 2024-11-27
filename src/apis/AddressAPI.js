@@ -38,5 +38,4 @@ export const registerCustomer = async (customerData) => {
             "Content-Type": "application/json",
         },
     });
-
 };
