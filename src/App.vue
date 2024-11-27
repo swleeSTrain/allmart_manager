@@ -107,7 +107,8 @@ import { RouterLink } from 'vue-router'
               </svg>
             </summary>
             <div class="p-4 space-y-2 text-gray-700">
-              <p>회원 목록</p>
+              <p><RouterLink to ="/customer">회원 목록 </RouterLink></p>
+              <p><RouterLink to="/customer/register">회원 등록</RouterLink></p>
             </div>
           </details>
         </li>
