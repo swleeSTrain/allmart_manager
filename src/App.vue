@@ -4,17 +4,22 @@ import { RouterLink } from 'vue-router'
 import { useRouter } from "vue-router";
 import { useMember } from "./store/useMember.js";
 import {computed} from "vue";
+import { useMart } from "./store/useMart.js";
 
 const router = useRouter();
 
 // 구조 분해 하면 반응성 유지 안됨, 구조 분해 안써야 됨
 const memberStore = useMember();
+const martStore = useMart();
 
-const isLoggedIn = computed(() => !!memberStore.accessToken); // 반응성 유지
+const isSignIn = computed(() => !!memberStore.accessToken); // 반응성 유지
+
+const isMartStore = computed(() => !!martStore.martName);
 
 // 로그아웃 처리 함수
 const handleLogout = () => {
   memberStore.logout();
+  martStore.clearMartInfo();
   router.push("/member/signIn");
 };
 
@@ -32,8 +37,15 @@ const handleLogout = () => {
       <!-- 세로 구분선 -->
       <div class="border-l border-gray-400 h-12"></div>
 
-      <!-- 마트 이름 -->
-      <div class="text-xl font-semibold">마트 이름</div>
+      <div v-if="isMartStore" class="flex items-center space-x-4">
+        <img
+            :src="`http://localhost:8080/uploads/s_${martStore.logoURL}`"
+            alt="마트 로고"
+            class="w-24 h-auto max-w-xs border border-gray-300 rounded-md shadow-sm"
+        />
+        <div class="text-xl font-semibold">{{ martStore.martName }}</div>
+      </div>
+
     </div>
 
     <!-- 오른쪽 메뉴 버튼들 -->
@@ -52,7 +64,7 @@ const handleLogout = () => {
         <span>홈</span>
       </a>
 
-      <div v-if="isLoggedIn" class="flex items-center space-x-4">
+      <div v-if="isSignIn" class="flex items-center space-x-4">
         <!-- 사용자 아이콘과 이름 -->
         <a href="#" class="flex items-center space-x-2">
           <svg class="w-10 h-10 transform transition-transform duration-300 " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">

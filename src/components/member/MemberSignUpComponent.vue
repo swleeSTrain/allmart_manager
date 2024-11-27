@@ -32,6 +32,32 @@
           />
         </div>
 
+        <!-- 마트 선택 -->
+        <div class="mb-5">
+          <label class="block text-lg font-bold text-gray-700 mb-2">마트 선택</label>
+          <div
+              class="mt-1 flex flex-row space-x-6 overflow-x-auto pb-4"
+              ref="scrollContainer"
+          >
+            <label
+                v-for="mart in result.dtoList"
+                :key="mart.martID"
+                class="flex items-center space-x-4 cursor-pointer"
+                @click="handleMartClick(mart.martID)"
+            >
+              <input
+                  type="radio"
+                  v-model="selectedMartID"
+                  :value="mart.martID"
+                  class="form-radio"
+              />
+              <span class="text-gray-800 text-lg font-bold">{{ mart.martName }}</span>
+            </label>
+          </div>
+          <p v-if="errorMessage" class="text-red-500 text-sm mt-1">{{ errorMessage }}</p>
+        </div>
+
+
         <button
             type="submit"
             class="w-full bg-blue-500 text-white py-3 px-5 rounded-md hover:bg-blue-600 transition duration-200"
@@ -49,31 +75,34 @@
 
 <script setup>
 import Swal from "sweetalert2";
-import {ref} from "vue";
-import {useRouter} from "vue-router";
-import {postSignUp} from "../../apis/memberApi"; // API 호출 파일 import
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { postSignUp } from "../../apis/memberApi";
+import { getListMart } from "../../apis/martApi"; // API 호출 추가
+import useMemberMart from "../../hooks/useMemberMart";
 
-// Vue Router 사용
 const router = useRouter();
 
-// 회원가입 데이터 상태 관리
+// 회원가입 데이터 상태
 const email = ref("");
 const password = ref("");
+const selectedMartID = ref(null);
+const errorMessage = ref("");
 
-// 회원가입 제출
+// 마트 리스트 불러오기
+const { result, scrollContainer, handleMartClick, loadMartPage } =
+    useMemberMart(getListMart);
+
 const submitSignUp = async () => {
   try {
-    // role 값 포함한 JSON 객체 생성
     const signUpData = {
       email: email.value,
       pw: password.value,
-      role: "MARTADMIN"
+      role: "MARTADMIN",
+      martID: selectedMartID.value, // 마트 ID 포함
     };
 
-    // API 호출
     const response = await postSignUp(signUpData);
-
-    // 성공 시 처리
     console.log("회원가입 성공:", response);
 
     await Swal.fire({
@@ -83,10 +112,9 @@ const submitSignUp = async () => {
       confirmButtonText: "확인",
     });
 
-    router.push("/member/signIn"); // 로그인 페이지로 이동
+    router.push("/member/signIn");
   } catch (error) {
     console.error("회원가입 실패:", error.response?.data || error.message);
-
     await Swal.fire({
       icon: "error",
       title: "회원가입 실패",

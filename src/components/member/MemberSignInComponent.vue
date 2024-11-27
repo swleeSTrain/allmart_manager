@@ -55,6 +55,7 @@ import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
 import { postSignIn } from "../../apis/MemberAPI.js";
 import { useMember } from "../../store/useMember.js";
+import {useMart} from "../../store/useMart.js";
 const { setTokens, accessToken, refreshToken } = useMember();
 
 const email = ref("");
@@ -78,10 +79,14 @@ const submitSignIn = async () => {
 
     // Pinia 스토어 가져오기
     const memberStore = useMember();
+    const martStore = useMart();
 
     // 토큰과 이메일 저장
     memberStore.setTokens(response.accessToken, response.refreshToken);
     memberStore.setEmail(email.value); // 이메일 저장
+
+    // 마트 정보 로드
+    await martStore.loadMartInfo(email.value);
 
     // 메인 페이지로 이동
     router.push("/"); // MainPage로 이동
