@@ -53,6 +53,7 @@ import AddressSearchComponent from "../../components/address/AddressSearchCompon
 import { registerCustomer } from "../../apis/AddressAPI.js";
 import { generateQRCode } from "../../apis/QRAPI.js"; // QR 코드 API 호출 함수
 import QrCodeModal from "../qr/QrCodeModal.vue"; // QR 코드 모달 컴포넌트
+import { useMart } from "../../store/useMart.js";
 
 export default {
   components: {
@@ -93,6 +94,8 @@ export default {
     },
     async registerCustomer() {
       try {
+        const martStore = useMart();
+        this.customer.martID = martStore.martID;
         const response = await registerCustomer(this.customer);
 
         Swal.fire({
