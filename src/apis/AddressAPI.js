@@ -37,5 +37,22 @@ export const registerCustomer = async (customerData) => {
         headers: {
             "Content-Type": "application/json",
         },
+
     });
-};
+}
+
+// 회원 등록 (에러 처리)
+// export const registerCustomer = async (customerData) => {
+//     console.log("Axios 전송 데이터:", customerData);
+//     try {
+//         const response = await tokenAPI.post("http://localhost:8080/api/v1/customer/register", customerData, {
+//             headers: {
+//                 "Content-Type": "application/json",
+//             },
+//         });
+//         return response.data; // 성공적으로 등록된 데이터 반환
+//     } catch (error) {
+//         console.error("회원 등록 실패:", error);
+//         throw error;
+//     }
+// };
