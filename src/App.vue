@@ -1,6 +1,27 @@
 <script setup>
 
 import { RouterLink } from 'vue-router'
+import { useRouter } from "vue-router";
+import { useMember } from "./store/useMember.js";
+import {computed} from "vue";
+import { useMart } from "./store/useMart.js";
+
+const router = useRouter();
+
+// 구조 분해 하면 반응성 유지 안됨, 구조 분해 안써야 됨
+const memberStore = useMember();
+const martStore = useMart();
+
+const isSignIn = computed(() => !!memberStore.accessToken); // 반응성 유지
+
+const isMartStore = computed(() => !!martStore.martName);
+
+// 로그아웃 처리 함수
+const handleLogout = () => {
+  memberStore.logout();
+  martStore.clearMartInfo();
+  router.push("/member/signIn");
+};
 
 </script>
 
@@ -16,8 +37,15 @@ import { RouterLink } from 'vue-router'
       <!-- 세로 구분선 -->
       <div class="border-l border-gray-400 h-12"></div>
 
-      <!-- 마트 이름 -->
-      <div class="text-xl font-semibold">마트 이름</div>
+      <div v-if="isMartStore" class="flex items-center space-x-4">
+        <img
+            :src="`http://localhost:8080/uploads/s_${martStore.logoURL}`"
+            alt="마트 로고"
+            class="w-24 h-auto max-w-xs border border-gray-300 rounded-md shadow-sm"
+        />
+        <div class="text-xl font-semibold">{{ martStore.martName }}</div>
+      </div>
+
     </div>
 
     <!-- 오른쪽 메뉴 버튼들 -->
@@ -36,17 +64,23 @@ import { RouterLink } from 'vue-router'
         <span>홈</span>
       </a>
 
-      <!-- 사용자 아이콘과 이름 -->
-      <a href="#" class="flex items-center space-x-1">
-        <svg class="w-10 h-10 transform transition-transform duration-300 " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="{1.5}" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z" />
-        </svg>
+      <div v-if="isSignIn" class="flex items-center space-x-4">
+        <!-- 사용자 아이콘과 이름 -->
+        <a href="#" class="flex items-center space-x-2">
+          <svg class="w-10 h-10 transform transition-transform duration-300 " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z" />
+          </svg>
+          <span>{{ memberStore.email }}님</span>
+        </a>
 
-        <span>아이디 님</span>
-      </a>
+        <button class="border border-gray-300 px-4 py-2 rounded hover:bg-gray-100" @click="handleLogout">로그아웃</button>
+      </div>
 
-      <!-- 로그아웃 버튼 -->
-      <button class="border border-gray-300 px-4 py-2 rounded hover:bg-gray-100">로그아웃</button>
+
+      <div v-else>
+        <button class="border border-gray-300 px-4 py-2 rounded hover:bg-gray-100">로그인</button>
+      </div>
+
     </div>
   </header>
   <div class="flex">
@@ -79,6 +113,7 @@ import { RouterLink } from 'vue-router'
             </summary>
             <div class="p-4 space-y-2 text-gray-700">
               <p><RouterLink to="/order/list">주문관리</RouterLink></p>
+              <p><RouterLink to="/delivery/dashboard">배달관리</RouterLink></p>
             </div>
           </details>
         </li>
@@ -107,7 +142,8 @@ import { RouterLink } from 'vue-router'
               </svg>
             </summary>
             <div class="p-4 space-y-2 text-gray-700">
-              <p>회원 목록</p>
+              <p><RouterLink to ="/customer">회원 목록 </RouterLink></p>
+              <p><RouterLink to="/customer/register">회원 등록</RouterLink></p>
             </div>
           </details>
         </li>
