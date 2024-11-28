@@ -247,17 +247,29 @@ const handleEdit = async () => {
       icon: 'success',
       title: '수정 완료',
       text: '상품이 성공적으로 수정되었습니다.',
-    })
-    moveToRead(productID);
+    });
+
+    moveToRead(productID);  // 상품 상세 페이지로 이동
 
   } catch (error) {
     console.error('Failed to edit product:', error);
-    Swal.fire({
-      icon: 'error',
-      title: '오류 발생',
-      text: '상품을 수정하는 도중 오류가 발생했습니다.',
-    });
+
+    // 백엔드에서 오류 메시지를 응답으로 받아 처리
+    if (error.response && error.response.data) {
+      Swal.fire({
+        icon: 'error',
+        title: '오류 발생',
+        text: error.response.data.message || '상품을 수정하는 도중 오류가 발생했습니다.',
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: '오류 발생',
+        text: '상품을 수정하는 도중 오류가 발생했습니다.',
+      });
+    }
   }
+
 };
 
 const handleDelete = async () => {
@@ -311,7 +323,7 @@ const moveToRead = (productID) => {
   router.push({
     path: `/product/read/${productID}`,
     query
-})
+  })
   ;
 };
 

@@ -202,19 +202,28 @@ const handleSubmit = async () => {
       title: '작성 완료 !!!',
       text: '상품이 성공적으로 등록되었습니다.',
     }).then(() => {
-
       router.push({ path: '/product/list', query: { page: 1 } });
     });
 
   } catch (error) {
-    console.error('Failed to add question:', error);
+    console.error('Failed to add product:', error);
 
-    Swal.fire({
-      icon: 'error',
-      title: '오류 발생',
-      text: '상품을 등록하는 도중 오류가 발생했습니다.',
-    });
+    // 백엔드에서 오류 메시지를 응답으로 받아 처리
+    if (error.response && error.response.data) {
+      Swal.fire({
+        icon: 'error',
+        title: '오류 발생',
+        text: error.response.data.message || '상품을 등록하는 도중 오류가 발생했습니다.',
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: '오류 발생',
+        text: '상품을 등록하는 도중 오류가 발생했습니다.',
+      });
+    }
   }
+
 };
 
 // 목록으로 이동

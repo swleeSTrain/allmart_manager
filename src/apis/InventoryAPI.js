@@ -1,11 +1,11 @@
-import axios from "axios";
+import tokenAPI from './TokenAPI.js'; // tokenAPI를 가져오기
 
 const host = 'http://localhost:8080/api/v1/inventories';
 
 export const getInventoryList = async (page, searchParams = {}) => {
 
     try {
-        const res = await axios.get(`${host}/list`, {
+        const res = await tokenAPI.get(`${host}/list`, {
             params: {
                 page: page,
                 size: 10,

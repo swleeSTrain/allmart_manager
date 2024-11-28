@@ -42,8 +42,10 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2';
 import AddressSearchComponent from "../../components/address/AddressSearchComponent.vue";
 import { registerCustomer } from "../../apis/AddressAPI.js";
+import { useMart } from "../../store/useMart.js";
 
 export default {
   components: {
@@ -58,6 +60,7 @@ export default {
         roadAddress: "",
         detailAddress: "",
         fullAddress: "",
+        martID: null,
       },
     };
   },
@@ -76,17 +79,42 @@ export default {
         roadAddress: "",
         detailAddress: "",
         fullAddress: "",
+        martID: null,
       };
     },
     async registerCustomer() {
       try {
+        const martStore = useMart();
+        this.customer.martID = martStore.martID;
+
         const response = await registerCustomer(this.customer);
-        alert("고객 등록 완료!");
-        console.log(response);
-        this.resetForm(); // 성공 시 폼 초기화
+        console.log("고객 등록 완료:", response);
+
+        // 성공 메시지 표시
+        Swal.fire({
+          icon: 'success',
+          title: '등록 완료 !!!',
+          text: '고객이 성공적으로 등록되었습니다.',
+        }).then(() => {
+          this.resetForm(); // 성공 시 폼 초기화
+        });
       } catch (error) {
         console.error("고객 등록 실패:", error);
-        alert("고객 등록에 실패했습니다.");
+
+        // 백엔드 오류 메시지 처리
+        if (error.response && error.response.data) {
+          Swal.fire({
+            icon: 'error',
+            title: '오류 발생',
+            text: error.response.data.message || '고객을 등록하는 도중 오류가 발생했습니다.',
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: '오류 발생',
+            text: '고객을 등록하는 도중 오류가 발생했습니다.',
+          });
+        }
       }
     },
   },

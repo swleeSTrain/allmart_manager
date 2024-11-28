@@ -1,4 +1,4 @@
-import axios from "axios";
+import tokenAPI from './TokenAPI.js'; // tokenAPI를 가져오기
 
 const host = 'http://localhost:8080/api/v1/product';
 
@@ -6,7 +6,7 @@ const host = 'http://localhost:8080/api/v1/product';
 export const getListProduct = async (page, searchParams = {}) => {
     const { keyword, type, categoryID } = searchParams;
 
-    const res = await axios.get(`${host}/list`, {
+    const res = await tokenAPI.get(`${host}/list`, {
         params: {
             page: page,
             size: 10,
@@ -22,7 +22,7 @@ export const getListProduct = async (page, searchParams = {}) => {
 // 조회
 export const getReadProduct = async (productID) => {
 
-    const res = await axios.get(`${host}/${productID}`)
+    const res = await tokenAPI.get(`${host}/${productID}`)
 
     return res.data
 }
@@ -31,7 +31,7 @@ export const getReadProduct = async (productID) => {
 export const postAddProduct = async (formData) => {
 
     try {
-        const res = await axios.post(`${host}/add`, formData, {
+        const res = await tokenAPI.post(`${host}/add`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
@@ -47,7 +47,7 @@ export const postAddProduct = async (formData) => {
 // 삭제
 export const deleteProduct = async (productID) => {
 
-    const res = await axios.delete(`${host}/${productID}`)
+    const res = await tokenAPI.delete(`${host}/${productID}`)
 
     return res.data
 }
@@ -57,7 +57,7 @@ export const putEditProduct = async (productID, formData) => {
 
     try {
 
-        const res = await axios.put(`${host}/${productID}`, formData, {
+        const res = await tokenAPI.put(`${host}/${productID}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },

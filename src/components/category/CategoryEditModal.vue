@@ -61,15 +61,33 @@ const editCategory = async () => {
   const categoryObj = {categoryID: props.categoryID, name: name.value}; // categoryID로 변경
 
   try {
-
     await putEditCategory(categoryObj);
-    Swal.fire({icon: 'success', title: '수정 성공!', text: '카테고리가 수정되었습니다.'});
+    Swal.fire({
+      icon: 'success',
+      title: '수정 성공!',
+      text: '카테고리가 수정되었습니다.'
+    });
     emit('refreshList'); // 리스트 갱신 요청
     closeModal();
 
   } catch (error) {
     console.error(error);
-    Swal.fire({icon: 'error', title: '오류 발생', text: '수정 중 문제가 발생했습니다.'});
+    if (error.response && error.response.data) {
+
+      // 백엔드에서 보낸 구체적인 오류 메시지를 표시
+      Swal.fire({
+        icon: 'error',
+        title: '오류 발생',
+        text: error.response.data.message || '수정 중 문제가 발생했습니다.'
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: '오류 발생',
+        text: '수정 중 문제가 발생했습니다.'
+      });
+    }
   }
+
 };
 </script>

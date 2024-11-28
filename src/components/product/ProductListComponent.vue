@@ -113,4 +113,6 @@ const { result, pageArr, loadPageData, moveToRead, updateCategory,
   searchParams, search, onEnterKey, cleanAndLoad, moveToAdd
   } = useProductListData(getListProduct);
 
+console.log(result);
+
 </script>
