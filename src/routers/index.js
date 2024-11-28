@@ -7,6 +7,7 @@ import inventoryRouting from "./inventory.js";
 import orderRouting from "./order.js";
 import memberRouting from "./member.js";
 import customerRouting from "./customer.js";
+import deliveryRouting from "./delivery.js";
 
 const MainPage = () => import("../pages/MainPage.vue");
 const MemberSignIn = () => import("../pages/member/MemberSignInPage.vue");
@@ -21,6 +22,8 @@ const routeConfig = createRouter({
         categoryRouting,
         orderRouting,
         inventoryRouting,
+        customerRouting,
+        deliveryRouting,
         memberRouting,
         customerRouting,
     ],

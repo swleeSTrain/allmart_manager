@@ -1,6 +1,6 @@
 <script setup>
 import useOrderListData from '../../hooks/useOrderListData.js';
-import { getListOrder } from '../../apis/OrderAPI.js';
+import { getListOrder, updateOrderStatus as updateOrderStatusAPI } from '../../apis/OrderAPI.js';
 import useDateFormatter from '../../hooks/useDateFormatter.js';
 
 const { formatDate } = useDateFormatter();
@@ -8,6 +8,26 @@ const { formatDate } = useDateFormatter();
 const { result, pageArr, loadPageData, moveToRead,
   searchParams, search, onEnterKey, cleanAndLoad
 } = useOrderListData(getListOrder);
+
+// 주문 상태 업데이트
+const handleOrderStatusUpdate = async (orderId, newStatus) => {
+  try {
+    await updateOrderStatusAPI(orderId, newStatus); // API 호출 함수 사용
+    alert('주문 상태가 성공적으로 변경되었습니다.');
+  } catch (error) {
+    console.error('Failed to update order status:', error);
+    alert('주문 상태 변경에 실패했습니다.');
+  }
+};
+
+// 테이블 로우 클릭 시 이동
+const handleRowClick = (event, orderId) => {
+  // 드롭다운 선택 시 상세 페이지로 이동하지 않도록 처리
+  if (event.target.tagName !== 'SELECT') {
+    moveToRead(orderId);
+  }
+};
+
 </script>
 
 <template>
@@ -52,11 +72,21 @@ const { result, pageArr, loadPageData, moveToRead,
           v-for="order in result.dtoList"
           :key="order.orderId"
           class="hover:bg-gray-100 cursor-pointer"
-          @click="moveToRead(order.orderId)"
+          @click="(event) => handleRowClick(event, order.orderId)"
       >
         <td class="border border-gray-300 px-4 py-4">{{ order.orderId }}</td>
         <td class="border border-gray-300 px-4 py-4">{{ order.customerId }}</td>
-        <td class="border border-gray-300 px-4 py-4">{{ order.status }}</td>
+        <td class="border border-gray-300 px-4 py-4">
+          <select
+              v-model="order.status"
+              @change="handleOrderStatusUpdate(order.orderId, order.status)"
+              class="border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="PENDING">대기</option>
+            <option value="COMPLETED">완료</option>
+            <option value="CANCELLED">취소</option>
+          </select>
+        </td>
         <td class="border border-gray-300 px-4 py-4">{{ order.totalAmount }}원</td>
         <td class="border border-gray-300 px-4 py-4">{{ formatDate(order.orderTime) }}</td>
       </tr>

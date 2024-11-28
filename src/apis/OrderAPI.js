@@ -25,3 +25,13 @@ export const getReadOrder = async (orderID) => {
 
     return res.data
 }
+
+// 상태 변경
+export const updateOrderStatus = async (orderID, newStatus) => {
+    const res = await axios.put(`${host}/${orderID}/status`, null, {
+        params: {
+            newStatus: newStatus, // 변경할 상태
+        },
+    });
+    return res.data;
+};

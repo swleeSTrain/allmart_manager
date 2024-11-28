@@ -34,35 +34,45 @@ const useOrderListData = (listFn) => {
     });
 
     const loadPageData = async (page) => {
+        try {
+            loading.value = true;
 
-        loading.value = true;
+            const apiSearchParams = {
+                ...searchParams.value,
+                keyword: searchParams.value.keyword || null,
+            };
 
-        const apiSearchParams = {
-            ...searchParams.value,
-            keyword: searchParams.value.keyword || null
-        };
+            console.log('API 요청:', apiSearchParams); // API 요청 로그
 
-        const data = await fn(page, apiSearchParams);
-        result.value = data;
-        loading.value = false;
+            const data = await fn(page, apiSearchParams);
 
-        pageStore.setCurrentPage(page);
-        searchStore.setSearchParams(searchParams.value.type, searchParams.value.keyword);
+            console.log('API 응답:', data); // API 응답 로그
 
-        // 항상 검색 조건 포함
-        const query = {
-            page,
-            ...(searchParams.value.keyword && {
-                type: searchParams.value.type,
-                keyword: searchParams.value.keyword
-            })
-        };
+            result.value = data;
+            loading.value = false;
 
-        router.replace({
-            path: route.path,
-            query
-        });
+            pageStore.setCurrentPage(page);
+            searchStore.setSearchParams(searchParams.value.type, searchParams.value.keyword);
+
+            // 항상 검색 조건 포함
+            const query = {
+                page,
+                ...(searchParams.value.keyword && {
+                    type: searchParams.value.type,
+                    keyword: searchParams.value.keyword,
+                }),
+            };
+
+            router.replace({
+                path: route.path,
+                query,
+            });
+        } catch (error) {
+            console.error('API 요청 실패:', error); // 에러 로그
+            loading.value = false;
+        }
     };
+
 
 
     const pageArr = computed(() => {
