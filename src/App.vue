@@ -113,6 +113,7 @@ const handleLogout = () => {
             </summary>
             <div class="p-4 space-y-2 text-gray-700">
               <p><RouterLink to="/order/list">주문관리</RouterLink></p>
+              <p><RouterLink to="/delivery/dashboard">배달관리</RouterLink></p>
             </div>
           </details>
         </li>
