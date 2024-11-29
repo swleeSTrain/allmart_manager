@@ -2,6 +2,7 @@
 import useOrderListData from '../../hooks/useOrderListData.js';
 import { getListOrder, updateOrderStatus as updateOrderStatusAPI } from '../../apis/OrderAPI.js';
 import useDateFormatter from '../../hooks/useDateFormatter.js';
+import Swal from 'sweetalert2';
 
 const { formatDate } = useDateFormatter();
 
@@ -13,11 +14,24 @@ const { result, pageArr, loadPageData, moveToRead,
 const handleOrderStatusUpdate = async (orderId, newStatus) => {
   try {
     await updateOrderStatusAPI(orderId, newStatus); // API 호출 함수 사용
-    alert('주문 상태가 성공적으로 변경되었습니다.');
+
+    Swal.fire({
+      icon: 'success',
+      title: '성공',
+      text: '주문 상태가 성공적으로 변경되었습니다.',
+      confirmButtonText: '확인'
+    });
   } catch (error) {
     console.error('Failed to update order status:', error);
-    alert('주문 상태 변경에 실패했습니다.');
+
+    Swal.fire({
+      icon: 'error',
+      title: '오류',
+      text: '주문 상태 변경에 실패했습니다.',
+      confirmButtonText: '확인'
+    });
   }
+
 };
 
 // 테이블 로우 클릭 시 이동

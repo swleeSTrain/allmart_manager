@@ -92,6 +92,7 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import useDateFormatter from '../../hooks/useDateFormatter.js';
 import {getReadOrder, updateOrderStatus} from '../../apis/OrderAPI.js';
+import Swal from 'sweetalert2';
 
 const route = useRoute();
 const router = useRouter();
@@ -115,11 +116,24 @@ const updateStatus = async () => {
   try {
     await updateOrderStatus(order.value.orderId, selectedStatus.value);
     order.value.status = selectedStatus.value;
-    alert('주문 상태가 성공적으로 변경되었습니다.');
+
+    Swal.fire({
+      icon: 'success',
+      title: '성공',
+      text: '주문 상태가 성공적으로 변경되었습니다.',
+      confirmButtonText: '확인'
+    });
   } catch (error) {
     console.error('Failed to update order status:', error);
-    alert('주문 상태 변경에 실패했습니다.');
+
+    Swal.fire({
+      icon: 'error',
+      title: '오류',
+      text: '주문 상태 변경에 실패했습니다.',
+      confirmButtonText: '확인'
+    });
   }
+
 };
 
 // 컴포넌트 로드 시 API 호출
