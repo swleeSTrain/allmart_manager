@@ -26,7 +26,9 @@
 
 <script setup>
 import { ref } from 'vue';
+import {useRouter} from "vue-router";
 
+const router = useRouter();
 const emit = defineEmits(['close']);
 const isOpen = ref(true);
 
@@ -41,5 +43,6 @@ const props = defineProps({
 const closeModal = () => {
   isOpen.value = false;
   emit('close');
+  router.push("/customer");
 };
 </script>
