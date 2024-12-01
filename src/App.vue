@@ -23,6 +23,10 @@ const handleLogout = () => {
   router.push("/member/signIn");
 };
 
+const handleLogin = () => {
+  router.push("/member/signIn")
+}
+
 </script>
 
 <template>
@@ -78,7 +82,7 @@ const handleLogout = () => {
 
 
       <div v-else>
-        <button class="border border-gray-300 px-4 py-2 rounded hover:bg-gray-100">로그인</button>
+        <button class="border border-gray-300 px-4 py-2 rounded hover:bg-gray-100" @click="handleLogin">로그인</button>
       </div>
 
     </div>

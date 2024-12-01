@@ -40,32 +40,25 @@
       </div>
 
       <!-- 카테고리 선택 -->
-      <div class="relative">
-        <!-- 드롭다운 버튼 -->
-        <button
-            @click="toggleDropdown"
-            class="w-full text-left bg-white border border-gray-300 rounded-md shadow-sm px-4 py-2 text-lg"
-        >
-          {{ selectedCategory?.name || "카테고리를 선택하세요" }}
-          <span class="float-right text-gray-500">▼</span>
-        </button>
-
-        <!-- 드롭다운 리스트 -->
-        <div
-            v-if="isDropdownOpen"
-            ref="dropdownList"
-            class="absolute z-10 mt-2 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto"
-        >
-          <div
+      <div class="mb-5">
+        <label class="block text-lg font-bold text-gray-700 mb-2">카테고리</label>
+        <div class="mt-1 flex flex-row space-x-6 scrollbar-visible overflow-x-auto pb-4" ref="scrollContainer">
+          <label
               v-for="category in result.dtoList"
               :key="category.categoryID"
-              class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-              @click="selectCategory(category)"
+              class="flex items-center space-x-4 cursor-pointer"
+              @click="handleCategoryClick(category.categoryID)"
           >
-            {{ category.name }}
-          </div>
-          <p v-if="loading" class="text-center text-gray-500 py-2">Loading...</p>
+            <input
+                type="radio"
+                v-model="form.categoryID"
+                :value="category.categoryID"
+                class="form-radio"
+            />
+            <span class="text-gray-800 text-lg font-bold">{{ category.name }}</span>
+          </label>
         </div>
+        <p v-if="errorMessage" class="text-red-500 text-sm mt-1">{{ errorMessage }}</p>
       </div>
 
       <!-- 파일 입력 -->
