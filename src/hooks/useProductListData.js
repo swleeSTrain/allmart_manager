@@ -31,7 +31,6 @@ const useProductListData = (listFn) => {
     });
 
     const loadPageData = async (page) => {
-
         const apiSearchParams = {
             ...searchParams.value,
             type: searchParams.value.type === 'all' ? 'name&sku' : searchParams.value.type,
@@ -46,6 +45,7 @@ const useProductListData = (listFn) => {
 
         const query = {
             page,
+            ...(searchParams.value.type !== 'all' && searchParams.value.type ? { type: searchParams.value.type } : {}),
             ...(searchParams.value.keyword ? { keyword: searchParams.value.keyword } : {}),
             ...(searchParams.value.categoryID ? { categoryID: searchParams.value.categoryID } : {})
         };
@@ -116,6 +116,8 @@ const useProductListData = (listFn) => {
     const moveToRead = (productID) => {
         const query = {
             page: currentPage.value,
+            type: searchParams.value.type,
+            categoryID: searchParams.value.categoryID,
             ...(searchParams.value.keyword && {
                 type: searchParams.value.type,
                 keyword: searchParams.value.keyword
@@ -131,9 +133,11 @@ const useProductListData = (listFn) => {
     const moveToAdd = () => {
         const query = {
             page: currentPage.value,
+            type: searchParams.value.type,
+            categoryID: searchParams.value.categoryID,
             ...(searchParams.value.keyword && {
                 type: searchParams.value.type,
-                keyword: searchParams.value.keyword
+                keyword: searchParams.value.keyword,
             })
         };
 

@@ -1,9 +1,14 @@
 import tokenAPI from './TokenAPI.js'; // tokenAPI를 가져오기
+import { useMart } from '../store/useMart.js';
 
-const host = 'http://localhost:8080/api/v1/product';
+const martStore = useMart();
+const martID = martStore.martID;
+
+const host = `http://localhost:8080/api/v1/product/${martID}`;
 
 // 리스트
 export const getListProduct = async (page, searchParams = {}) => {
+
     const { keyword, type, categoryID } = searchParams;
 
     const res = await tokenAPI.get(`${host}/list`, {
