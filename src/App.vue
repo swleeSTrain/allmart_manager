@@ -23,6 +23,10 @@ const handleLogout = () => {
   router.push("/member/signIn");
 };
 
+const handleLogin = () => {
+  router.push("/member/signIn")
+}
+
 </script>
 
 <template>
@@ -78,7 +82,7 @@ const handleLogout = () => {
 
 
       <div v-else>
-        <button class="border border-gray-300 px-4 py-2 rounded hover:bg-gray-100">로그인</button>
+        <button class="border border-gray-300 px-4 py-2 rounded hover:bg-gray-100" @click="handleLogin">로그인</button>
       </div>
 
     </div>
@@ -99,6 +103,21 @@ const handleLogout = () => {
               <p>공지사항</p>
               <p>공지등록</p>
               <p>시스템 공지사항</p>
+            </div>
+          </details>
+        </li>
+        <li>
+          <details class="w-64 bg-white rounded-lg shadow-md overflow-hidden">
+            <summary class="cursor-pointer bg-blue-400 text-white p-4 flex justify-between items-center">
+              <span>마트관리</span>
+              <!-- Arrow icon -->
+              <svg class="w-4 h-4 transform transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <div class="p-4 space-y-2 text-gray-700">
+              <p><RouterLink to="/mart/list">마트목록</RouterLink></p>
+              <p><RouterLink to="/mart/add">마트등록</RouterLink></p>
             </div>
           </details>
         </li>

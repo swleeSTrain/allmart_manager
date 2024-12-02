@@ -57,7 +57,7 @@
       <!-- 테이블 본문 -->
       <tbody class="text-base"> <!-- 본문 글자 크기 조정 -->
       <tr
-          v-for="(product, index) in result.dtoList.slice(0, 10)"
+          v-for="product in result.dtoList"
           :key="product.productID"
           class="hover:bg-gray-100 cursor-pointer"
           @click="moveToRead(product.productID)"
