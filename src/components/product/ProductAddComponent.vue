@@ -61,48 +61,7 @@
         <p v-if="errorMessage" class="text-red-500 text-sm mt-1">{{ errorMessage }}</p>
       </div>
 
-      <!-- 파일 입력 -->
-      <div class="mb-5">
-        <label for="files" class="block text-lg font-bold text-gray-700 mb-2">Files</label>
-        <!-- 숨김 처리된 파일 입력 -->
-        <input
-            ref="fileInput"
-            type="file"
-            id="files"
-            class="hidden"
-            multiple
-            @change="handleFileChange"
-        />
-        <!-- 커스텀 버튼 -->
-        <button
-            type="button"
-            @click="triggerFileInput"
-            class="mt-1 block w-full h-12 border border-gray-300 rounded-md shadow-sm bg-white text-gray-700 text-left px-4"
-        >
-          {{ selectedFiles.length > 0 ? `파일 ${selectedFiles.length}개` : '이미지 첨부' }}
-        </button>
-
-        <!-- 선택된 파일 리스트 -->
-        <div v-if="selectedFiles.length" class="mt-3">
-          <ul>
-            <li
-                v-for="(file, index) in selectedFiles"
-                :key="index"
-                class="flex items-center justify-between bg-gray-100 p-2 mb-2 rounded"
-            >
-              <span class="text-gray-700">{{ file.name }}</span>
-              <button
-                  type="button"
-                  @click="removeFile(index)"
-                  class="text-red-500 font-bold hover:underline"
-              >
-                X
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
-
+      <FileUploadComponent @updateFiles="updateSelectedFiles" />
 
       <div class="flex justify-center space-x-4 mt-6">
         <button
@@ -125,50 +84,35 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
-import {useRoute, useRouter} from 'vue-router';
-import {postAddProduct} from '../../apis/ProductAPI.js';
+import { ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { postAddProduct } from '../../apis/ProductAPI.js';
 import useProductCategory from '../../hooks/useProductCategory.js';
 import { getListCategory } from '../../apis/CategoryAPI.js';
 import Swal from 'sweetalert2';
+import FileUploadComponent from '../common/FileUploadComponent.vue'; // 컴포넌트 임포트
 
 const route = useRoute();
 const router = useRouter();
 const errorMessage = ref('');
-const fileInput = ref(null);
-const selectedFiles = ref([]);
+const selectedFiles = ref([]); // 이 파일들을 FileUploadComponent로 전달받음
 
-const {
-  result, scrollContainer, handleCategoryClick
-} = useProductCategory(getListCategory, false);
+const updateSelectedFiles = (files) => {
+  selectedFiles.value = files;
+};
+
+const { result, scrollContainer, handleCategoryClick } = useProductCategory(getListCategory, false);
 
 // 폼 데이터
 const form = ref({
   name: '',
   sku: '',
   price: '',
-  categoryID: null, // 단일 선택
+  categoryID: null,
 });
-
-// 파일 선택 창 열기
-const triggerFileInput = () => {
-  fileInput.value.click();
-};
-
-// 파일 변경 처리
-const handleFileChange = (event) => {
-  const files = Array.from(event.target.files);
-  selectedFiles.value = [...selectedFiles.value, ...files];
-};
-
-// 파일 제거
-const removeFile = (index) => {
-  selectedFiles.value.splice(index, 1);
-};
 
 // 태그 선택 유효성 검사 및 제출 처리
 const handleSubmit = async () => {
-
   if (!form.value.categoryID) {
     errorMessage.value = '카테고리를 선택해야 합니다.';
     return;
@@ -180,7 +124,7 @@ const handleSubmit = async () => {
       title: '이미지 첨부 필요',
       text: '상품 이미지를 하나 이상 첨부해야 합니다.',
     });
-    return; // 이미지를 추가하지 않으면 등록을 진행하지 않음
+    return;
   }
 
   const formData = new FormData();
@@ -195,8 +139,6 @@ const handleSubmit = async () => {
 
   try {
     const response = await postAddProduct(formData);
-    console.log('Product added:', response);
-
     Swal.fire({
       icon: 'success',
       title: '작성 완료 !!!',
@@ -204,42 +146,27 @@ const handleSubmit = async () => {
     }).then(() => {
       router.push({ path: '/product/list', query: { page: 1 } });
     });
-
   } catch (error) {
-    console.error('Failed to add product:', error);
-
-    // 백엔드에서 오류 메시지를 응답으로 받아 처리
-    if (error.response && error.response.data) {
-      Swal.fire({
-        icon: 'error',
-        title: '오류 발생',
-        text: error.response.data.message || '상품을 등록하는 도중 오류가 발생했습니다.',
-      });
-    } else {
-      Swal.fire({
-        icon: 'error',
-        title: '오류 발생',
-        text: '상품을 등록하는 도중 오류가 발생했습니다.',
-      });
-    }
+    const errorMessage = error.response?.data?.message || '상품을 등록하는 도중 오류가 발생했습니다.';
+    Swal.fire({
+      icon: 'error',
+      title: '오류 발생',
+      text: errorMessage,
+    });
   }
-
 };
 
-// 목록으로 이동
 const moveToList = () => {
   const query = {
     page: route.query.page || 1,
-    ...(route.query.keyword && {keyword: route.query.keyword}),
-    ...(route.query.type && {type: route.query.type}),
+    ...(route.query.keyword && { keyword: route.query.keyword }),
+    ...(route.query.type && { type: route.query.type }),
   };
 
-  router.push({
-    path: '/product/list',
-    query
-  });
+  router.push({ path: '/product/list', query });
 };
 </script>
+
 
 <style scoped>
 .scrollbar-visible {
