@@ -28,6 +28,10 @@
           <td class="text-xl text-black-600 border-b-2 border-gray-400">{{ mart.phoneNumber }}</td>
         </tr>
         <tr>
+          <td class="text-left font-semibold text-gray-700 border-b-2 border-r-2 border-gray-400">템플릿</td>
+          <td class="text-xl text-black-600 border-b-2 border-gray-400">{{ mart.template }}</td>
+        </tr>
+        <tr>
           <td class="text-left font-semibold text-gray-700 border-b-2 border-r-2 border-gray-400">주소</td>
           <td class="text-xl text-black-600 border-b-2 border-gray-400">{{ mart.address }}</td>
         </tr>

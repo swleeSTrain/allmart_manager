@@ -31,7 +31,7 @@ const routeConfig = createRouter({
     ],
 });
 
-// // beforeEach 라우터 가드
+// beforeEach 라우터 가드
 // routeConfig.beforeEach((to, from, next) => {
 //     const memberStore = useMember(); // Pinia 스토어 접근
 //

@@ -101,6 +101,7 @@ export default {
         this.customer.martID = martStore.martID;
         const response = await registerCustomer(this.customer);
 
+
         Swal.fire({
           icon: "success",
           title: "등록 완료 !!!",
@@ -109,7 +110,7 @@ export default {
           this.resetForm();
 
           // QR 코드 생성 API 호출
-          const qrResponse = await generateQRCode();
+          const qrResponse = await generateQRCode(martStore.martID);
           this.qrCodeUrl = qrResponse; // QR 코드 URL 저장
           this.isQrCodeModalOpen = true; // QR 코드 모달 열기
         });
