@@ -66,12 +66,15 @@ export const deleteMart = async (martID) => {
 export const putEditMart = async (martID, formData) => {
 
     try {
+        console.log("==============================test");
 
         const res = await axios.put(`${host}/${martID}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
         });
+
+        console.log(res.data);
 
         return res.data;
     } catch (error) {
