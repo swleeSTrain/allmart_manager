@@ -8,6 +8,7 @@ const CustomerListPage = () => import( "../pages/customer/CustomerListPage.vue")
 const customerRouting = {
     path: '/customer',
     component: IndexPage,
+    meta: { requiresMartAdmin: true },
     children: [
         { path: 'register', component: CustomerRegisterPage },
         { path: '', component: CustomerListPage},
