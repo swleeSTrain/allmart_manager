@@ -74,7 +74,7 @@ const handleLogin = () => {
       <!-- 세로 구분선 -->
       <div class="border-l border-gray-400 h-12"></div>
 
-      <div v-if="isMartStore" class="flex items-center space-x-4">
+      <div v-if="isMartStore && !isSystemAdmin" class="flex items-center space-x-4">
         <img
             :src="`http://localhost:8080/uploads/s_${martStore.logoURL}`"
             alt="마트 로고"
@@ -82,6 +82,7 @@ const handleLogin = () => {
         />
         <div class="text-xl font-semibold">{{ martStore.martName }}</div>
       </div>
+
 
     </div>
 
