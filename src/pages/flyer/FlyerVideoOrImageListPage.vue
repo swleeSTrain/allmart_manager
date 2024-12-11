@@ -2,7 +2,7 @@
 
 <script setup lang="ts">
 
-import FlyerVideoOrImageListComponent from "../../components/flyer/FlyerVideoOrImageListComponent.vue";
+import FlyerVideoOrImageListComponent from "../../components/flyer/FlyerVideoListComponent.vue";
 </script>
 
 <template>

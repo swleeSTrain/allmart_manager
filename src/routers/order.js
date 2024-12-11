@@ -6,6 +6,7 @@ const OrderReadPage = () => import("../pages/order/OrderReadPage.vue");
 const orderRouting ={
     path: '/order',
     component: IndexPage,
+    meta: { requiresMartAdmin: true },
     children: [
         { path: 'list', component: OrderListPage },
         { path: 'read/:orderId', component: OrderReadPage },
