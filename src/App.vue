@@ -30,25 +30,6 @@ const userRole = computed(() => {
 const isSystemAdmin = computed(() => userRole.value === "SYSTEMADMIN");
 const isMartAdmin = computed(() => userRole.value === "MARTADMIN");
 
-// 페이지 접근 제어
-const hasAccess = computed(() => {
-  // 경로별 접근 가능한 역할 정의
-  const roleAccessMap = {
-    "/qna/list": ["MARTADMIN"], // QnA 리스트는 마트 관리자만 접근 가능
-    "/mart": ["SYSTEMADMIN"], // 마트 관리 리스트는 시스템 관리자만 접근 가능
-    // 다른 경로에 대한 접근 정의 추가 가능
-  };
-
-  const allowedRoles = roleAccessMap[route.path] || []; // 현재 경로에서 허용된 역할
-  return allowedRoles.includes(userRole.value);
-});
-
-// 접근 권한이 없을 경우 리다이렉트 처리
-if (!hasAccess.value && route.path !== "/member/signIn") {
-  alert("접근 권한이 없습니다.");
-  router.push("/"); // 홈 또는 다른 경로로 리다이렉트
-}
-
 // 로그아웃 처리 함수
 const handleLogout = () => {
   memberStore.logout();
@@ -231,38 +212,20 @@ const handleLogin = () => {
           </details>
         </li>
         <li>
-            <details class="w-64 bg-white rounded-lg shadow-md overflow-hidden">
-              <summary class="cursor-pointer bg-blue-400 text-white p-4 flex justify-between items-center">
-                <span>전단지/배너관리</span>
-                <!-- Arrow icon -->
-                <svg class="w-4 h-4 transform transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </summary>
-              <div class="p-4 space-y-2 text-gray-700">
-                <p><RouterLink to="/flyer/upload">전단지 업로드</RouterLink></p>
-                <p><RouterLink to="/flyer/list">전단지 파일목록</RouterLink></p>
-                <p><RouterLink to="/flyer/request">전단지 요청목록</RouterLink></p>
-                <p><RouterLink to="/flyer/register">전단지 영상 생성 </RouterLink></p>
-                <p><RouterLink to="/banner/image">배너 관리</RouterLink></p>
-              </div>
-            </details>
-          </li>
-          <li>
-          <details class="w-64 bg-white rounded-lg shadow-md overflow-hidden">
-            <summary class="cursor-pointer bg-blue-400 text-white p-4 flex justify-between items-center">
-              <span>기능관리</span>
-              <!-- Arrow icon -->
-              <svg class="w-4 h-4 transform transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </summary>
-            <div class="p-4 space-y-2 text-gray-700">
-              <p>매출 관리</p>
-              <p>결제 관리</p>
-              <p><RouterLink to="/category/list">카테고리</RouterLink></p>
-            </div>
-          </details>
+        <details class="w-64 bg-white rounded-lg shadow-md overflow-hidden">
+          <summary class="cursor-pointer bg-blue-400 text-white p-4 flex justify-between items-center">
+            <span>기능관리</span>
+            <!-- Arrow icon -->
+            <svg class="w-4 h-4 transform transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </summary>
+          <div class="p-4 space-y-2 text-gray-700">
+            <p>매출 관리</p>
+            <p>결제 관리</p>
+            <p><RouterLink to="/category/list">카테고리</RouterLink></p>
+          </div>
+        </details>
         </li>
         <li v-if="isMartAdmin">
           <details class="w-64 bg-white rounded-lg shadow-md overflow-hidden">

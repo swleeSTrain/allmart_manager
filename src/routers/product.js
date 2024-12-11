@@ -8,6 +8,7 @@ const ProductEditPage = () => import("../pages/product/ProductEditPage.vue");
 const productRouting ={
     path: '/product',
     component: IndexPage,
+    meta: { requiresMartAdmin: true },
     children: [
         { path: 'list', component: ProductListPage },
         { path: 'add', component: ProductAddPage },

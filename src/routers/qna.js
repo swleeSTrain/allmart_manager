@@ -9,6 +9,7 @@ const QnaEditPage = () => import("../pages/qna/QnaEditPage.vue");
 const qnaRouting = {
     path: "/qna",
     component: IndexPage,
+    meta: { requiresMartAdmin: true },
     children: [
         { path: "list", component: QnaListPage },
         { path: "add", component: QnaRegisterPage },

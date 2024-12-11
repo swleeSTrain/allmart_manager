@@ -7,6 +7,7 @@ const CategoryEditPage = () => import("../pages/category/CategoryEditPage.vue");
 const categoryRouting ={
     path: '/category',
     component: IndexPage,
+    meta: { requiresSystemAdmin: true },
     children: [
         { path: 'list', component: CategoryListPage },
         { path: 'add', component: CategoryAddPage },
