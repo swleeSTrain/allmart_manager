@@ -7,6 +7,7 @@ const IndexPage = () => import("../pages/delivery/IndexPage.vue");
 const deliveryRouting ={
     path: '/delivery',
     component: IndexPage,
+    meta: { requiresMartAdmin: true },
     children: [
         {path: 'dashboard', component: DeliveryDashboardPage},
         {path: "orders", component: DeliveryOrdersPage},
