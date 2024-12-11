@@ -9,6 +9,8 @@ import memberRouting from "./member.js";
 import customerRouting from "./customer.js";
 import deliveryRouting from "./delivery.js";
 import martRouting from "./mart.js";
+import bannerRouting from "./banner.js";
+import flyerRouting from "./flyer.js";
 
 
 const MainPage = () => import("../pages/MainPage.vue");
