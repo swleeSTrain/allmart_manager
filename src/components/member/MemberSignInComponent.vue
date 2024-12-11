@@ -55,14 +55,12 @@ import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
 import { postSignIn } from "../../apis/MemberAPI.js";
 import { useMember } from "../../store/useMember.js";
-import {useMart} from "../../store/useMart.js";
-const { setTokens, accessToken, refreshToken } = useMember();
+import { useMart } from "../../store/useMart.js";
 
 const email = ref("");
 const password = ref("");
 const router = useRouter();
 
-// 회원가입 페이지로 이동하는 함수
 const moveToSignUp = () => {
   router.push("/member/signUp");
 };
@@ -77,16 +75,27 @@ const submitSignIn = async () => {
 
     const response = await postSignIn(signInData);
 
+    if (!response || !response.accessToken || !response.role) {
+      throw new Error("로그인 응답이 올바르지 않습니다.");
+    }
+
     // Pinia 스토어 가져오기
     const memberStore = useMember();
     const martStore = useMart();
 
     // 토큰과 이메일 저장
     memberStore.setTokens(response.accessToken, response.refreshToken);
-    memberStore.setEmail(email.value); // 이메일 저장
+    memberStore.setEmail(response.email); // 이메일 저장
+    memberStore.setRole(response.role); // 사용자 유형 저장
 
-    // 마트 정보 로드
-    await martStore.loadMartInfo(email.value);
+    // 마트 관리자일 경우에만 마트 정보 로드
+    if (response.role === "MARTADMIN") {
+      await martStore.loadMartInfo(email.value);
+    }
+    if (response.role === "SYSTEMADMIN") {
+      await martStore.loadMartInfo(email.value);
+    }
+
 
     // 메인 페이지로 이동
     router.push("/"); // MainPage로 이동
@@ -101,5 +110,6 @@ const submitSignIn = async () => {
     });
   }
 };
+
 
 </script>

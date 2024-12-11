@@ -8,6 +8,7 @@ const MartEditPage = () => import("../pages/mart/MartEditPage.vue");
 const martRouting = {
     path: '/mart',
     component: IndexPage,
+    meta: { requiresSystemAdmin: true }, // SYSTEMADMIN 권한 필요
     children: [
         { path: 'list', component: MartListPage },
         { path: 'add', component: MartAddPage },

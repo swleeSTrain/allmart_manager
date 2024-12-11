@@ -2,11 +2,14 @@
 
 import { RouterLink } from 'vue-router'
 import { useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { useMember } from "./store/useMember.js";
 import {computed} from "vue";
 import { useMart } from "./store/useMart.js";
 
 const router = useRouter();
+const route = useRoute(); // 현재 경로 가져오기
+const isLoginPage = computed(() => route.path === "/member/signIn");
 
 // 구조 분해 하면 반응성 유지 안됨, 구조 분해 안써야 됨
 const memberStore = useMember();
@@ -15,6 +18,36 @@ const martStore = useMart();
 const isSignIn = computed(() => !!memberStore.accessToken); // 반응성 유지
 
 const isMartStore = computed(() => !!martStore.martName);
+
+// 현재 사용자의 역할 확인
+const userRole = computed(() => {
+  if (!memberStore.accessToken) return null;
+  const payload = JSON.parse(atob(memberStore.accessToken.split(".")[1])); // JWT 디코딩
+  return payload.role; // "SYSTEMADMIN" 또는 "MARTADMIN"
+});
+
+// 역할 확인
+const isSystemAdmin = computed(() => userRole.value === "SYSTEMADMIN");
+const isMartAdmin = computed(() => userRole.value === "MARTADMIN");
+
+// 페이지 접근 제어
+const hasAccess = computed(() => {
+  // 경로별 접근 가능한 역할 정의
+  const roleAccessMap = {
+    "/qna/list": ["MARTADMIN"], // QnA 리스트는 마트 관리자만 접근 가능
+    "/mart": ["SYSTEMADMIN"], // 마트 관리 리스트는 시스템 관리자만 접근 가능
+    // 다른 경로에 대한 접근 정의 추가 가능
+  };
+
+  const allowedRoles = roleAccessMap[route.path] || []; // 현재 경로에서 허용된 역할
+  return allowedRoles.includes(userRole.value);
+});
+
+// 접근 권한이 없을 경우 리다이렉트 처리
+if (!hasAccess.value && route.path !== "/member/signIn") {
+  alert("접근 권한이 없습니다.");
+  router.push("/"); // 홈 또는 다른 경로로 리다이렉트
+}
 
 // 로그아웃 처리 함수
 const handleLogout = () => {
@@ -88,7 +121,7 @@ const handleLogin = () => {
     </div>
   </header>
   <div class="flex">
-    <div class=" min-h-screen max-h-fit w-fit bg-blue-200 p-4">
+    <div v-if="!isLoginPage" class=" min-h-screen max-h-fit w-fit bg-blue-200 p-4">
       <ul class="space-y-2">
         <li>
           <details class="w-64 bg-white rounded-lg shadow-md overflow-hidden">
@@ -106,7 +139,7 @@ const handleLogin = () => {
             </div>
           </details>
         </li>
-        <li>
+        <li v-if="isSystemAdmin">
           <details class="w-64 bg-white rounded-lg shadow-md overflow-hidden">
             <summary class="cursor-pointer bg-blue-400 text-white p-4 flex justify-between items-center">
               <span>마트관리</span>
@@ -121,7 +154,7 @@ const handleLogin = () => {
             </div>
           </details>
         </li>
-        <li>
+        <li v-if="isMartAdmin">
           <details class="w-64 bg-white rounded-lg shadow-md overflow-hidden">
             <summary class="cursor-pointer bg-blue-400 text-white p-4 flex justify-between items-center">
               <span>주문관리</span>
@@ -136,7 +169,7 @@ const handleLogin = () => {
             </div>
           </details>
         </li>
-        <li>
+        <li v-if="isMartAdmin">
           <details class="w-64 bg-white rounded-lg shadow-md overflow-hidden">
             <summary class="cursor-pointer bg-blue-400 text-white p-4 flex justify-between items-center">
               <span>상품관리</span>
@@ -151,7 +184,7 @@ const handleLogin = () => {
             </div>
           </details>
         </li>
-        <li>
+        <li v-if="isMartAdmin">
           <details class="w-64 bg-white rounded-lg shadow-md overflow-hidden">
             <summary class="cursor-pointer bg-blue-400 text-white p-4 flex justify-between items-center">
               <span>회원관리</span>
@@ -166,7 +199,7 @@ const handleLogin = () => {
             </div>
           </details>
         </li>
-        <li>
+        <li v-if="isMartAdmin">
           <details class="w-64 bg-white rounded-lg shadow-md overflow-hidden">
             <summary class="cursor-pointer bg-blue-400 text-white p-4 flex justify-between items-center">
               <span>재고관리</span>
@@ -178,6 +211,22 @@ const handleLogin = () => {
             <div class="p-4 space-y-2 text-gray-700">
               <p><RouterLink to="/inventories/list">재고 목록</RouterLink></p>
               <p>재고 등록</p>
+            </div>
+          </details>
+        </li>
+        <li v-if="isSystemAdmin">
+          <details class="w-64 bg-white rounded-lg shadow-md overflow-hidden">
+            <summary class="cursor-pointer bg-blue-400 text-white p-4 flex justify-between items-center">
+              <span>전단지관리</span>
+              <!-- Arrow icon -->
+              <svg class="w-4 h-4 transform transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <div class="p-4 space-y-2 text-gray-700">
+              <p><RouterLink to="/flyer/upload">전단지 업로드</RouterLink></p>
+              <p><RouterLink to="/flyer/list">전단지 파일목록</RouterLink></p>
+              <p><RouterLink to="/flyer/request">전단지 요청목록</RouterLink></p>
             </div>
           </details>
         </li>
@@ -197,7 +246,7 @@ const handleLogin = () => {
             </div>
           </details>
         </li>
-        <li>
+        <li v-if="isMartAdmin">
           <details class="w-64 bg-white rounded-lg shadow-md overflow-hidden">
             <summary class="cursor-pointer bg-blue-400 text-white p-4 flex justify-between items-center">
               <span>문의사항</span>
@@ -207,7 +256,7 @@ const handleLogin = () => {
               </svg>
             </summary>
             <div class="p-4 space-y-2 text-gray-700">
-              <p>QnA</p>
+              <p><RouterLink to="/qna/list">QnA</RouterLink></p>
               <p>FAQ</p>
               <p>환불</p>
             </div>
@@ -223,5 +272,3 @@ const handleLogin = () => {
     </div>
   </div>
 </template>
-
-
