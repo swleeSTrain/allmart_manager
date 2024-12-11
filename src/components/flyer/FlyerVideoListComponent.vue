@@ -77,6 +77,7 @@
 
 <script>
 import { ref, computed } from "vue";
+import {getFlyerData, getMartFlyerData} from "../../apis/FlyerAPI.js";
 
 export default {
   setup() {
@@ -92,6 +93,24 @@ export default {
       },
 
     ]);
+
+    // API 호출 후 데이터를 가져오는 함수
+    const fetchData = async () => {
+      try {
+        const response = await getMartFlyerData();
+
+        if (response && response.data && response.data.dtoList) {
+          data.value = response.data.dtoList; // dtoList를 data에 설정
+          console.log("Fetched data:", data.value);
+        } else {
+          console.warn("No data fetched or invalid response format:", response);
+          data.value = []; // 기본 빈 배열로 초기화
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        data.value = []; // 오류 시 빈 배열로 초기화
+      }
+    };
 
     const searchQuery = ref("");
     const filter = ref("all");
@@ -122,6 +141,7 @@ export default {
       filter,
       filteredData,
       resetSearch,
+      fetchData
     };
   },
 };

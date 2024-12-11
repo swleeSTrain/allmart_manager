@@ -10,6 +10,7 @@ import customerRouting from "./customer.js";
 import deliveryRouting from "./delivery.js";
 import martRouting from "./mart.js";
 import flyerRouting from "./flyer.js";
+import bannerRouting from "./banner.js";
 
 const MainPage = () => import("../pages/MainPage.vue");
 const MemberSignIn = () => import("../pages/member/MemberSignInPage.vue");
@@ -29,7 +30,8 @@ const routeConfig = createRouter({
         memberRouting,
         customerRouting,
         martRouting,
-        flyerRouting
+        flyerRouting,
+        bannerRouting
     ],
 });
 

@@ -149,7 +149,7 @@
 import { ref } from "vue";
 import draggable from "vuedraggable";
 import { useFlyerData } from "../../hooks/useFlyerData.js";
-import { registerFlyers } from "../../apis/flyerAPI.js";
+import { registerFlyers } from "../../apis/FlyerAPI.js";
 
 const { content, audioFiles, title, attachments, getFlyerData } = useFlyerData();
 
@@ -157,6 +157,7 @@ const selectedAttachments = ref([]);
 const selectedAudioFiles = ref([]);
 const attachmentsInput = ref(null);
 const audioFilesInput = ref(null);
+
 
 
 
@@ -221,6 +222,14 @@ const sendAllData = async () => {
     // API 호출
     await registerFlyers(dataToSend);
     alert("데이터 전송 성공!");
+
+    // 입력값 초기화
+    title.value = "";
+    content.value = "";
+    audioFiles.value = [];
+    attachments.value = [];
+    selectedAttachments.value = [];
+    selectedAudioFiles.value = [];
   } catch (error) {
     console.error("데이터 전송 중 오류 발생:", error);
     alert("데이터 전송에 실패했습니다. 다시 시도해주세요.");
