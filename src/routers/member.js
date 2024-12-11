@@ -6,6 +6,7 @@ const MemberSignIn = () => import("../pages/member/MemberSignInPage.vue");
 const memberRouting ={
     path: '/member',
     component: IndexPage,
+    meta: { requiresMartAdmin: true },
     children: [
         { path: 'signUp', component: MemberSignUp },
         { path: 'signIn', component: MemberSignIn },

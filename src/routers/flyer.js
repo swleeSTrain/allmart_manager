@@ -9,6 +9,7 @@ const flyerRequestList = () => import("../pages/flyer/FlyerRequestListPage.vue")
 const flyerRouting = ({
     path: '/flyer',
     component: IndexPage,
+    meta: { requiresSystemAdmin: true },
     children: [
         { path: 'upload', component: flyerUpload },
         { path: 'list', component: flyerList},
