@@ -233,7 +233,7 @@ const handleLogin = () => {
         <li>
             <details class="w-64 bg-white rounded-lg shadow-md overflow-hidden">
               <summary class="cursor-pointer bg-blue-400 text-white p-4 flex justify-between items-center">
-                <span>전단지관리</span>
+                <span>전단지/배너관리</span>
                 <!-- Arrow icon -->
                 <svg class="w-4 h-4 transform transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -243,6 +243,8 @@ const handleLogin = () => {
                 <p><RouterLink to="/flyer/upload">전단지 업로드</RouterLink></p>
                 <p><RouterLink to="/flyer/list">전단지 파일목록</RouterLink></p>
                 <p><RouterLink to="/flyer/request">전단지 요청목록</RouterLink></p>
+                <p><RouterLink to="/flyer/register">전단지 영상 생성 </RouterLink></p>
+                <p><RouterLink to="/banner/image">배너 관리</RouterLink></p>
               </div>
             </details>
           </li>
