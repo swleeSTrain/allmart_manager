@@ -9,7 +9,7 @@
             <img
                 v-for="(file, index) in mart.attachLogo"
                 :key="index"
-                :src="`http://localhost:8080/uploads/${file}`"
+                :src="`${file}`"
                 alt="마트 로고"
                 class="w-full h-40 object-cover rounded-lg shadow-md border border-gray-200"
             />

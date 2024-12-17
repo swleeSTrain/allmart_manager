@@ -11,6 +11,7 @@ import deliveryRouting from "./delivery.js";
 import martRouting from "./mart.js";
 import bannerRouting from "./banner.js";
 import flyerRouting from "./flyer.js";
+import boardRouting from "./board.js";
 
 
 const MainPage = () => import("../pages/MainPage.vue");
@@ -32,6 +33,7 @@ const routeConfig = createRouter({
         customerRouting,
         martRouting,
         flyerRouting,
+        boardRouting,
         bannerRouting
     ],
 });
