@@ -57,7 +57,7 @@ const handleLogin = () => {
 
       <div v-if="isMartStore" class="flex items-center space-x-4">
         <img
-            :src="`http://localhost:8080/uploads/s_${martStore.logoURL}`"
+            :src="`${martStore.logoURL}`"
             alt="마트 로고"
             class="w-24 h-auto max-w-xs border border-gray-300 rounded-md shadow-sm"
         />
@@ -114,7 +114,7 @@ const handleLogin = () => {
               </svg>
             </summary>
             <div class="p-4 space-y-2 text-gray-700">
-              <p>공지사항</p>
+              <p><RouterLink to="/board/list">글목록</RouterLink></p>
               <p>공지등록</p>
               <p>시스템 공지사항</p>
             </div>

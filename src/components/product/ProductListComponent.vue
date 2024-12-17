@@ -66,7 +66,7 @@
         <td class="border border-gray-300 px-4 py-4">
           <img
               v-if="product.thumbnailImage"
-              :src="`http://localhost:8080/uploads/s_${product.thumbnailImage}`"
+              :src="`${product.thumbnailImage}`"
               alt="이미지"
               class="w-24 h-auto max-w-xs border border-gray-300 rounded-md shadow-sm"
           />

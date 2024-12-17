@@ -11,7 +11,7 @@
             <img
                 v-for="(file, index) in product.attachImages"
                 :key="index"
-                :src="`http://localhost:8080/uploads/${file}`"
+                :src="`${file}`"
                 alt="첨부 이미지"
                 class="w-full h-40 object-cover rounded-lg shadow-md border border-gray-200"
             />

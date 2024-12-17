@@ -87,7 +87,7 @@
               class="relative group"
           >
             <img
-                :src="file.url ? file.url : `http://localhost:8080/uploads/${file.name}`"
+                :src="file.url ? file.url : `${file.name}`"
                 alt="첨부 이미지"
                 class="w-full h-40 object-cover rounded-lg shadow-md border border-gray-200"
             />
