@@ -229,8 +229,8 @@ const handleEdit = async () => {
       // 새로 추가된 파일
       formData.append('files', file.raw);
     } else {
-      // 기존 파일의 이름만 전송
-      formData.append('existingFileNames', file.name);
+      // 기존 파일의 URL 전송
+      formData.append('existingFileNames', file.url);
     }
   }
 
@@ -273,8 +273,6 @@ const handleEdit = async () => {
 };
 
 const handleDelete = async () => {
-
-  console.log("===================== 삭제 삭제 =======================");
 
   const productID = route.params.productID;
 
@@ -356,12 +354,7 @@ onMounted(async () => {
 
     // 기존 파일 데이터를 새로운 파일 데이터 형식으로 변환
     selectedFiles.value = product.value.attachImages.map((file) => {
-      const fileName = file.split('/').pop(); // 경로에서 파일명만 추출
-
-      return {
-        name: fileName, // 전체 파일명을 사용
-        raw: null // 기존 파일이므로 raw는 null
-      };
+      return { name: file.split('/').pop(), url: file, raw: null }; // URL 유지
     });
 
     console.log('Transformed Files:', selectedFiles.value);
