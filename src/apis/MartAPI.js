@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 
-const host = 'http://localhost:8080/api/v1/mart';
+const host = 'https://allmartsystem.shop/api/v1/mart';
 
 // 리스트
 export const getListMart = async (page, searchParams = {}) => {
@@ -17,6 +17,7 @@ export const getListMart = async (page, searchParams = {}) => {
                 keyword: keyword || null,
                 type: type || null,
             },
+            withCredentials: true,
         });
 
         console.log(res.data);
@@ -32,7 +33,7 @@ export const getListMart = async (page, searchParams = {}) => {
 // 조회
 export const getReadMart = async (martID) => {
 
-    const res = await axios.get(`${host}/${martID}`)
+    const res = await axios.get(`${host}/${martID}`, { withCredentials: true });
 
     return res.data
 }
@@ -45,6 +46,7 @@ export const postAddMart = async (formData) => {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
+            , withCredentials: true
         });
 
         return res.data;
@@ -57,7 +59,7 @@ export const postAddMart = async (formData) => {
 // 삭제
 export const deleteMart = async (martID) => {
 
-    const res = await axios.delete(`${host}/${martID}`)
+    const res = await axios.delete(`${host}/${martID}`, { withCredentials: true });
 
     return res.data
 }
@@ -72,6 +74,7 @@ export const putEditMart = async (martID, formData) => {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
+            withCredentials: true,
         });
 
         console.log(res.data);
