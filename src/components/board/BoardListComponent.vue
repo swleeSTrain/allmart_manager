@@ -51,9 +51,9 @@
                alt="Preview Image" />
         </div>
         <div>{{ post.writer || 'Anonymous' }}</div>
-        <div class="text-sm">{{ formatDate(post.createTime) }}</div>
+        <div class="text-sm">{{ formatDate(post.createDate) }}</div>
         <div class="text-sm">
-          {{ shouldDisplayUpdateDate(post.createTime, post.updateTime) ? formatDate(post.updateTime) : '-' }}
+          {{ shouldDisplayUpdateDate(post.createDate, post.modifyDate) ? formatDate(post.modifyDate) : '-' }}
         </div>
       </div>
     </div>
@@ -91,8 +91,8 @@ const formatDate = (dateString) => {
   });
 };
 
-const shouldDisplayUpdateDate = (createTime, updateTime) => {
-  return createTime !== updateTime;
+const shouldDisplayUpdateDate = (createDate, modifyDate) => {
+  return createDate !== modifyDate;
 };
 
 const navigateToCreate = () => {
