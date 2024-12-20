@@ -9,7 +9,9 @@ import { useMart } from "./store/useMart.js";
 
 const router = useRouter();
 const route = useRoute(); // 현재 경로 가져오기
-const isLoginPage = computed(() => route.path === "/member/signIn");
+// const isLoginPage = computed(() => route.path === "/member/signIn");
+const isAuthPage = computed(() => ['/member/signIn', '/member/signUp'].includes(route.path));
+
 
 // 구조 분해 하면 반응성 유지 안됨, 구조 분해 안써야 됨
 const memberStore = useMember();
@@ -103,7 +105,7 @@ const handleLogin = () => {
     </div>
   </header>
   <div class="flex">
-    <div v-if="!isLoginPage" class=" min-h-screen max-h-fit w-fit bg-blue-200 p-4">
+    <div v-if="!isAuthPage" class=" min-h-screen max-h-fit w-fit bg-blue-200 p-4">
       <ul class="space-y-2">
         <li>
           <details class="w-64 bg-white rounded-lg shadow-md overflow-hidden">
