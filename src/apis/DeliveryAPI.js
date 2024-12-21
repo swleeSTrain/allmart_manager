@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const deliveryAPIHost = "http://localhost:8080/api/v1/delivery";
+const deliveryAPIHost = "https://allmartsystem.shop/api/v1/delivery";
 
 export const fetchDeliveryStatusSummary = async () => {
     try {

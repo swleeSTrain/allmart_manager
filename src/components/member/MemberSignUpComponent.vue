@@ -94,8 +94,8 @@
 import Swal from "sweetalert2";
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import { postSignUp } from "../../apis/memberApi";
-import { getListMart } from "../../apis/martApi"; // API 호출 추가
+import { postSignUp } from "../../apis/MemberAPI"; // API 호출 추가
+import { getListMart } from "../../apis/MartAPI"; // API 호출 추가
 import useMemberMart from "../../hooks/useMemberMart";
 
 const router = useRouter();

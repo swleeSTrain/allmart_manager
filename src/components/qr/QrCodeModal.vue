@@ -6,7 +6,7 @@
       <div class="flex justify-center mb-4">
         <img
             v-if="qrCodeUrl"
-            :src="`http://localhost:8080/uploads/${qrCodeUrl}`"
+            :src="`${qrCodeUrl}`"
             alt="QR Code"
             class="border border-gray-300 rounded-lg shadow-md"
         />

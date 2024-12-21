@@ -87,7 +87,7 @@
               class="relative group"
           >
             <img
-                :src="file.url ? file.url : `http://localhost:8080/uploads/${file.name}`"
+                :src="file.url ? file.url : `${file.name}`"
                 alt="첨부 이미지"
                 class="w-full h-40 object-cover rounded-lg shadow-md border border-gray-200"
             />
@@ -202,8 +202,8 @@ const handleEdit = async () => {
       // 새로 추가된 파일
       formData.append('files', file.raw);
     } else {
-      // 기존 파일의 이름만 전송
-      formData.append('existingFileNames', file.name);
+      // 기존 파일의 URL 전송
+      formData.append('existingFileNames', file.url);
     }
   }
 
@@ -281,9 +281,9 @@ onMounted(async () => {
     form.value.address = mart.value.address || '';
     form.value.certificate = mart.value.certificate || '';
 
+    // 기존 이미지 URL을 그대로 사용
     selectedFiles.value = mart.value.attachLogo.map((file) => {
-      const fileName = file.split('/').pop();
-      return { name: fileName, raw: null };
+      return { name: file.split('/').pop(), url: file, raw: null }; // URL 유지
     });
   } catch (error) {
     console.error('마트 데이터를 불러오는 데 실패했습니다:', error);

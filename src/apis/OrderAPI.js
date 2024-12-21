@@ -1,6 +1,6 @@
 import tokenAPI from './TokenAPI.js'; // tokenAPI를 가져오기
 
-const host = 'http://localhost:8080/api/v1/orders'
+const host = 'https://allmartsystem.shop/api/v1/orders'
 
 export const getListOrder = async (page, searchParams = {}) => {
     const { keyword, type, orderId } = searchParams;

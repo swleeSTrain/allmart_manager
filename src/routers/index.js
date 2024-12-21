@@ -12,6 +12,8 @@ import martRouting from "./mart.js";
 import bannerRouting from "./banner.js";
 import flyerRouting from "./flyer.js";
 import driverRouting from "./driver.js";
+import boardRouting from "./board.js";
+import qnaRouting from "./qna.js";
 
 
 const MainPage = () => import("../pages/MainPage.vue");
@@ -34,7 +36,10 @@ const routeConfig = createRouter({
         martRouting,
         flyerRouting,
         bannerRouting,
-        driverRouting
+        driverRouting,
+        boardRouting,
+        bannerRouting,
+        qnaRouting
     ],
 });
 
