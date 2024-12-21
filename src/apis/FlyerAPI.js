@@ -6,10 +6,11 @@ export const registerFlyers = async(dataToSend) => {
 
 
     try {
-        const host = "http://localhost:8080";
+        const host = "https://allmartsystem.shop";
         const response = await axios.post(`${host}/api/v1/flyer/register`, dataToSend,
             {
                 headers: { 'Content-Type': 'application/json' }
+                ,withCredentials: true
             });
 
         if (response.status === 200) {
@@ -28,11 +29,12 @@ export const registerFlyers = async(dataToSend) => {
 
 export const getFlyerData = async( page = 1) => {
     try{
-        const host = "http://localhost:8080";
+        const host = "https://allmartsystem.shop";
         const response = await axios.get(`${host}/api/v1/flyer/list/system`,
             {
                 params : { page },
                 headers: { 'Content-Type': 'application/json' }
+                ,withCredentials: true
             });
         if(response.status === 200) {
             alert(`Flyer 리스트 조회 성공 : ${response.data}`);
@@ -49,11 +51,12 @@ export const getFlyerData = async( page = 1) => {
 export const getMartFlyerData = async( page = 1) => {
     try{
         const martId = 1;
-        const host = "http://localhost:8080";
+        const host = "https://allmartsystem.shop";
         const response = await axios.get(`${host}/api/v1/${martId}/flyer/list`,
             {
                 params : { page },
                 headers: { 'Content-Type': 'application/json' }
+                ,withCredentials: true
             });
         if(response.status === 200) {
             alert(`Flyer 리스트 조회 성공 : ${response.data}`);
