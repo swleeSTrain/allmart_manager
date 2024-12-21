@@ -20,7 +20,6 @@
       <button @click="cleanAndLoad" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none">
         초기화
       </button>
-
       <button @click="isAddModalOpen = true" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
         등록
       </button>
