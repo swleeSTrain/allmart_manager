@@ -28,7 +28,7 @@ export const getReadOrder = async (orderID) => {
 
 // 상태 변경
 export const updateOrderStatus = async (orderID, newStatus) => {
-    const res = await tokenAPI.put(`${host}/${orderID}/status`, null, {
+    const res = await tokenAPI.put(`${host}/${orderID}/complete`, null, {
         params: {
             newStatus: newStatus, // 변경할 상태
         },

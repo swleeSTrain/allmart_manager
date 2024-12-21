@@ -25,7 +25,6 @@
             >
               <option value="PENDING">대기</option>
               <option value="COMPLETED">완료</option>
-              <option value="CANCELLED">취소</option>
             </select>
           </td>
         </tr>
