@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto p-6 bg-gray-50 min-h-screen">
-    <h1 class="text-4xl font-extrabold text-gray-900 mb-8 text-center">Q&A List</h1>
+    <h1 class="text-4xl font-extrabold text-gray-900 mb-8 text-center">Q&A 목록</h1>
 
     <!-- 상단 검색 및 등록 버튼 -->
     <div class="flex flex-col md:flex-row gap-6 mb-8 items-center justify-between bg-white p-4 rounded-lg shadow-md">
@@ -17,13 +17,13 @@
             @click="search"
             class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75"
         >
-          Search
+          검색
         </button>
         <button
             @click="cleanAndLoad"
             class="px-6 py-3 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
         >
-          Reset
+          초기화
         </button>
       </div>
 <!--      <button-->
@@ -45,7 +45,7 @@
         <div>
           <h3 class="text-lg font-semibold text-gray-900">{{ qna.title }}</h3>
           <p class="text-sm text-gray-600 flex items-center">
-            <span class="material-icons text-blue-500 mr-2">writer</span> {{ qna.writer }}
+            <span class="material-icons text-blue-500 mr-2">작성자</span> {{ qna.writer }}
           </p>
         </div>
         <span class="text-sm text-gray-500">{{ new Date(qna.createdDate).toLocaleString() }}</span>

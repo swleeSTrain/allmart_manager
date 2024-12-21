@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto py-8 px-6">
     <!-- Q&A 제목 -->
-    <h1 class="text-4xl font-bold text-gray-800 mb-8">Q&A Detail</h1>
+    <h1 class="text-4xl font-bold text-gray-800 mb-8">Q&A 상세페이지</h1>
 
     <!-- 질문 섹션 -->
     <div class="bg-white shadow rounded-lg p-6 mb-8 border">
@@ -29,14 +29,14 @@
 
     <!-- 답변 섹션 -->
     <div class="bg-gray-50 shadow rounded-lg p-6">
-      <h3 class="text-2xl font-semibold text-gray-700 mb-6">Answers</h3>
+      <h3 class="text-2xl font-semibold text-gray-700 mb-6">답변</h3>
 
       <!-- 답변 추가 -->
       <button
           @click="toggleAddAnswerForm"
           class="mb-6 px-4 py-2 bg-green-500 text-white font-medium rounded-md shadow hover:bg-green-600 transition"
       >
-        {{ showAddAnswerForm ? "Cancel Answer" : "Add Answer" }}
+        {{ showAddAnswerForm ? "Cancel Answer" : "답변 등록" }}
       </button>
       <div v-show="showAddAnswerForm" class="bg-white p-4 rounded-lg shadow mb-8">
         <form @submit.prevent="submitAnswer">
@@ -103,20 +103,20 @@
                   @click="toggleEditMode(answer.ano)"
                   class="px-4 py-2 text-sm text-blue-500 font-medium rounded hover:bg-blue-50 transition"
               >
-                Edit
+                수정
               </button>
               <button
                   v-else
                   @click="submitEditAnswer(answer.ano)"
                   class="px-4 py-2 text-sm text-green-500 font-medium rounded hover:bg-green-50 transition"
               >
-                Save
+                저장
               </button>
               <button
                   @click="handleDeleteAnswer(answer.ano)"
                   class="px-4 py-2 text-sm text-red-500 font-medium rounded hover:bg-red-50 transition"
               >
-                Delete
+                삭제
               </button>
             </div>
           </li>

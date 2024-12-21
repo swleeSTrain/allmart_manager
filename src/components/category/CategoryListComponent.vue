@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-7xl mx-auto p-6">
-    <h2 class="text-2xl font-bold mb-4">Category List Component</h2>
+    <h2 class="text-2xl font-bold mb-4">카테고리 목록</h2>
 
     <!-- 검색 필드 -->
     <div class="flex flex-wrap justify-end items-center gap-2 mb-4">
@@ -15,10 +15,10 @@
           class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <button @click="search" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none">
-        Search
+        검색
       </button>
       <button @click="cleanAndLoad" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none">
-        Clean
+        초기화
       </button>
 
       <button @click="isAddModalOpen = true" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
