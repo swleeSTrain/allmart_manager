@@ -1,8 +1,8 @@
 import axios from "axios";
 import tokenAPI from './TokenAPI.js';
 
-// const host = 'https://allmartsystem.shop/api/v1/member';
-const host = 'http://localhost:8080/api/v1/member';
+const host = 'https://allmartsystem.shop/api/v1/member';
+// const host = 'http://localhost:8080/api/v1/member';
 
 export const getMartInfo = async (email) => {
 

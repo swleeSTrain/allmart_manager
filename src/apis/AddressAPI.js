@@ -21,8 +21,8 @@ export const loadKakaoPostcodeScript = () => {
 
 export const fetchCustomers = async () => {
     try {
-        // const response = await tokenAPI.get("https://allmartsystem.shop/api/v1/customer");
-        const response = await tokenAPI.get("http://localhost:8080/api/v1/customer");
+        const response = await tokenAPI.get("https://allmartsystem.shop/api/v1/customer");
+        // const response = await tokenAPI.get("http://localhost:8080/api/v1/customer");
         return response.data; // 서버에서 반환된 고객 데이터
     } catch (error) {
         console.error("회원 목록 가져오기 실패:", error);

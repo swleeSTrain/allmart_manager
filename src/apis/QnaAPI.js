@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const host = "https://allmartsystem.shop/api/v1/qna";
-const host = "http://localhost:8080/api/v1/qna";
+const host = "https://allmartsystem.shop/api/v1/qna";
+// const host = "http://localhost:8080/api/v1/qna";
 
 // Q&A 목록 가져오기
 export const getQuestions = async (page = 1, params = {}) => {

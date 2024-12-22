@@ -1,8 +1,8 @@
 import axios from "axios";
 import tokenAPI from "./TokenAPI.js";
 
-// const host = 'https://allmartsystem.shop/api/v1/board';
-const host = 'http://localhost:8080/api/v1/board';
+const host = 'https://allmartsystem.shop/api/v1/board';
+// const host = 'http://localhost:8080/api/v1/board';
 
 // 게시글 리스트를 가져오는 함수 (페이징 처리)
 export const getBoardList = async (page, searchParams = {}) => {
