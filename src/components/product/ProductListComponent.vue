@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-7xl mx-auto p-6">
-    <h1 class="text-2xl font-bold mb-4">Product List Component</h1>
+    <h1 class="text-2xl font-bold mb-4">상품 목록</h1>
 
     <!-- 검색 필드 -->
     <div class="flex flex-wrap justify-end items-center gap-2 mb-4">
@@ -23,13 +23,13 @@
           @click="search"
           class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none"
       >
-        Search
+        검색
       </button>
       <button
           @click="cleanAndLoad"
           class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none"
       >
-        Clean
+        초기화
       </button>
       <button
           @click="moveToAdd"

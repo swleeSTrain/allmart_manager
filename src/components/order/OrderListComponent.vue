@@ -46,6 +46,7 @@ const handleRowClick = (event, orderId) => {
 
 <template>
   <div class="max-w-7xl mx-auto p-6">
+    <h2 class="text-2xl font-bold mb-4">주문 목록</h2>
 
     <!-- 검색 필드 -->
     <div class="flex justify-end items-center space-x-2 mb-4">
@@ -60,10 +61,10 @@ const handleRowClick = (event, orderId) => {
           class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <button @click="search" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none">
-        Search
+        검색
       </button>
       <button @click="cleanAndLoad" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none">
-        Clean
+        초기화
       </button>
     </div>
 

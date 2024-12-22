@@ -1,9 +1,9 @@
 <template>
   <div>
-    <h2 class="text-2xl font-bold text-gray-700 mb-4">Create New Post</h2>
+    <h2 class="text-2xl font-bold text-gray-700 mb-4">새 게시물 작성</h2>
     <form @submit.prevent="handleSubmit" class="space-y-4">
       <div>
-        <label for="title" class="block text-gray-600 font-medium">Title:</label>
+        <label for="title" class="block text-gray-600 font-medium">제목:</label>
         <input
             type="text"
             v-model="postForm.title"
@@ -13,7 +13,7 @@
         />
       </div>
       <div>
-        <label for="author" class="block text-gray-600 font-medium">Author:</label>
+        <label for="author" class="block text-gray-600 font-medium">작성자:</label>
         <input
             type="text"
             v-model="postForm.writer"
@@ -23,7 +23,7 @@
         />
       </div>
       <div>
-        <label for="content" class="block text-gray-600 font-medium">Content:</label>
+        <label for="content" class="block text-gray-600 font-medium">내용:</label>
         <textarea
             v-model="postForm.content"
             id="content"
@@ -32,7 +32,7 @@
         ></textarea>
       </div>
       <div>
-        <label for="files" class="block text-gray-600 font-medium">Attach Files:</label>
+        <label for="files" class="block text-gray-600 font-medium">파일 첨부:</label>
         <input
             type="file"
             id="files"
@@ -48,13 +48,13 @@
             v-model="postForm.isPinned"
             class="mr-2"
         />
-        <label for="isPinned" class="text-gray-600 font-medium">Pin this post</label>
+        <label for="isPinned" class="text-gray-600 font-medium">이 게시물을 고정</label>
       </div>
       <button
           type="submit"
           class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition"
       >
-        Submit Post
+        게시물 등록
       </button>
     </form>
   </div>
@@ -85,13 +85,9 @@ export default {
         this.$router.push('/board/list');
       } catch (error) {
         console.error('Error creating post:', error);
-        alert('Failed to create post');
+        alert('게시물 등록에 실패했습니다.');
       }
     },
   },
 };
 </script>
-
-<style scoped>
-/* TailwindCSS 기반으로 기본 스타일을 추가하므로 별도의 CSS는 최소화 */
-</style>

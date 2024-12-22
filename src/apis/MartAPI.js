@@ -3,6 +3,7 @@
 import axios from 'axios';
 
 const host = 'https://allmartsystem.shop/api/v1/mart';
+// const host = 'http://localhost:8080/api/v1/mart';
 
 // 리스트
 export const getListMart = async (page, searchParams = {}) => {
