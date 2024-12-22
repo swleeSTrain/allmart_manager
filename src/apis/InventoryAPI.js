@@ -1,6 +1,7 @@
 import tokenAPI from './TokenAPI.js'; // tokenAPI를 가져오기
 
-const host = 'http://localhost:8080/api/v1/inventories';
+const host = 'https://allmartsystem.shop/api/v1/inventories';
+// const host = 'http://localhost:8080/api/v1/inventories';
 
 export const getInventoryList = async (page, searchParams = {}) => {
 

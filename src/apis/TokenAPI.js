@@ -1,9 +1,11 @@
 
 import axios from 'axios';
 import { useMember } from '../store/useMember';
+import Cookies from "js-cookie";
 
 const tokenAPI = axios.create({
-    baseURL: 'http://localhost:8080/api/v1',
+    baseURL: 'https://allmartsystem.shop/api/v1',
+    withCredentials: true,
     timeout: 10000, // 요청 타임아웃 설정 (10초)
 });
 
