@@ -67,15 +67,26 @@ routeConfig.beforeEach((to, from, next) => {
         return next("/member/signIn"); // 로그인 상태가 아닐 경우
     }
 
-    // 권한 확인
-    if (to.meta.requiresMartAdmin && userRole !== "MARTADMIN") {
-        alert("마트 관리자 권한이 필요합니다.");
-        return next("/"); // 홈으로 리다이렉트
-    }
+    // `flyer` 경로에 대한 특별한 권한 확인
+    if (to.path.startsWith("/flyer")) {
+        const isMartAdmin = userRole === "MARTADMIN";
+        const isSystemAdmin = userRole === "SYSTEMADMIN";
 
-    if (to.meta.requiresSystemAdmin && userRole !== "SYSTEMADMIN") {
-        alert("시스템 관리자 권한이 필요합니다.");
-        return next("/"); // 홈으로 리다이렉트
+        if (!(isMartAdmin || isSystemAdmin)) {
+            alert("접근 권한이 없습니다. 시스템 관리자 또는 마트 관리자 권한이 필요합니다.");
+            return next("/"); // 홈으로 리다이렉트
+        }
+    } else {
+        // `flyer`가 아닌 일반 경로에 대한 기존 권한 확인
+        if (to.meta.requiresMartAdmin && userRole !== "MARTADMIN") {
+            alert("마트 관리자 권한이 필요합니다.");
+            return next("/"); // 홈으로 리다이렉트
+        }
+
+        if (to.meta.requiresSystemAdmin && userRole !== "SYSTEMADMIN") {
+            alert("시스템 관리자 권한이 필요합니다.");
+            return next("/"); // 홈으로 리다이렉트
+        }
     }
 
     console.log("현재 사용자 역할:", userRole);

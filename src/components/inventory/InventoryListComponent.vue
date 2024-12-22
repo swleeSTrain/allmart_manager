@@ -1,10 +1,22 @@
 <script setup>
+import { ref } from 'vue';
 import useInventoryListData from '../../hooks/useInventoryListData.js';
 import { getInventoryList } from '../../apis/InventoryAPI.js';
+import InventoryEditModal from './InventoryEditModal.vue'; // InventoryEditModal 가져오기
 
 // Inventory List Data 훅 초기화
 const { result, pageArr, loadPageData, searchParams, search, onEnterKey, cleanAndLoad } =
     useInventoryListData(getInventoryList);
+
+// 수정 모달 제어
+const isEditModalOpen = ref(false);
+const selectedInventoryId = ref(null);
+
+// 수정 모달 열기
+const openEditModal = (inventoryID) => {
+  selectedInventoryId.value = inventoryID;
+  isEditModalOpen.value = true;
+};
 </script>
 
 <template>
@@ -33,7 +45,7 @@ const { result, pageArr, loadPageData, searchParams, search, onEnterKey, cleanAn
             @click="search"
             class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none"
         >
-          🔍 Search
+          🔍 검색
         </button>
       </div>
     </div>
@@ -54,6 +66,7 @@ const { result, pageArr, loadPageData, searchParams, search, onEnterKey, cleanAn
           <th class="border border-gray-300 px-4 py-2 text-left">SKU</th>
           <th class="border border-gray-300 px-4 py-2 text-left">Quantity</th>
           <th class="border border-gray-300 px-4 py-2 text-left">Status</th>
+          <th class="border border-gray-300 px-4 py-2 text-center">Actions</th>
         </tr>
         </thead>
         <!-- 테이블 본문 -->
@@ -68,14 +81,22 @@ const { result, pageArr, loadPageData, searchParams, search, onEnterKey, cleanAn
           <td class="border border-gray-300 px-4 py-2">{{ inventory.sku }}</td>
           <td class="border border-gray-300 px-4 py-2">{{ inventory.quantity }}</td>
           <td class="border border-gray-300 px-4 py-2">
-          <span
-              :class="{
-              'bg-green-100 text-green-700 px-2 py-1 rounded-lg': inventory.inStock,
-              'bg-red-100 text-red-700 px-2 py-1 rounded-lg': !inventory.inStock,
-            }"
-          >
-            {{ inventory.inStock ? 'In Stock' : 'Out of Stock' }}
-          </span>
+              <span
+                  :class="{
+                  'bg-green-100 text-green-700 px-2 py-1 rounded-lg': inventory.inStock,
+                  'bg-red-100 text-red-700 px-2 py-1 rounded-lg': !inventory.inStock,
+                }"
+              >
+                {{ inventory.inStock ? 'In Stock' : 'Out of Stock' }}
+              </span>
+          </td>
+          <td class="border border-gray-300 px-4 py-2 text-center">
+            <button
+                @click="openEditModal(inventory.inventoryID)"
+                class="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 focus:outline-none"
+            >
+              수정
+            </button>
           </td>
         </tr>
         </tbody>
@@ -104,5 +125,13 @@ const { result, pageArr, loadPageData, searchParams, search, onEnterKey, cleanAn
         </li>
       </ul>
     </nav>
+
+    <!-- 수정 모달 -->
+    <InventoryEditModal
+        v-if="isEditModalOpen"
+        :inventoryID="selectedInventoryId"
+        @close="isEditModalOpen = false"
+        @refreshList="cleanAndLoad"
+    />
   </div>
 </template>

@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const host = 'https://allmartsystem.shop/api/v1/kakao';
+// const host = 'http://localhost:8080/api/v1/kakao';
 
 export const getGeoLocation = async (address) => {
 

@@ -5,6 +5,7 @@ const martStore = useMart();
 const martID = martStore.martID;
 
 const host = `https://allmartsystem.shop/api/v1/product/${martID}`;
+// const host = `http://localhost:8080/api/v1/product/${martID}`;
 
 // 리스트
 export const getListProduct = async (page, searchParams = {}) => {

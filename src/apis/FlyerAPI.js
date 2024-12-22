@@ -7,6 +7,7 @@ export const registerFlyers = async(dataToSend) => {
 
     try {
         const host = "https://allmartsystem.shop";
+        // const host = "http://localhost:8080";
         const response = await axios.post(`${host}/api/v1/flyer/register`, dataToSend,
             {
                 headers: { 'Content-Type': 'application/json' }
@@ -30,6 +31,7 @@ export const registerFlyers = async(dataToSend) => {
 export const getFlyerData = async( page = 1) => {
     try{
         const host = "https://allmartsystem.shop";
+        // const host = "http://localhost:8080";
         const response = await axios.get(`${host}/api/v1/flyer/list/system`,
             {
                 params : { page },
