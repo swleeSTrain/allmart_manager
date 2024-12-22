@@ -1,6 +1,7 @@
 import axios from "axios"
 
-const host = 'https://allmartsystem.shop/api/v1/comment';
+// const host = 'https://allmartsystem.shop/api/v1/comment';
+const host = 'http://localhost:8080/api/v1/comment';
 
 export const getCommentList = async (bno, page) => {
     const response = await axios.get(`${host}/${bno}`, {
