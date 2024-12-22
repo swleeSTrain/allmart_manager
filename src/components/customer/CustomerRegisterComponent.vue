@@ -51,7 +51,7 @@
 import Swal from "sweetalert2";
 import AddressSearchComponent from "../../components/address/AddressSearchComponent.vue";
 import { registerCustomer } from "../../apis/AddressAPI.js";
-import { generateQRCode } from "../../apis/QRAPI.js"; // QR 코드 API 호출 함수
+import { generateQRCode } from "../../apis/QrAPI.js"; // QR 코드 API 호출 함수
 import QrCodeModal from "../qr/QrCodeModal.vue"; // QR 코드 모달 컴포넌트
 import { useMart } from "../../store/useMart.js";
 import {useRouter} from "vue-router";
