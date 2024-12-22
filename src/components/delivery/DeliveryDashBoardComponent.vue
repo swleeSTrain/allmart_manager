@@ -1,126 +1,163 @@
-<script setup>
-import { ref, onMounted, nextTick } from "vue";
-import { fetchDeliveryStatusCount } from "../../apis/DeliveryAPI.js";
-import { Chart, ArcElement, Tooltip, Legend, PieController } from "chart.js";
-import {useRouter} from "vue-router";
-
-// Chart.js에 필요한 컴포넌트 등록
-Chart.register(ArcElement, Tooltip, Legend, PieController);
-
-// 데이터 상태 관리
-const statusCounts = ref({
-  PENDING: 0,
-  IN_PROGRESS: 0,
-  COMPLETED: 0,
-});
-
-const router = useRouter();
-
-// 차트 인스턴스 (중복 렌더링 방지)
-let pieChartInstance = null;
-
-// API 호출하여 데이터 로드
-const loadStatusCounts = async () => {
-  try {
-    const data = await fetchDeliveryStatusCount();
-    statusCounts.value = data;
-  } catch (error) {
-    console.error("Failed to fetch delivery status count:", error);
-  }
-};
-
-// 차트 렌더링 함수
-const renderPieChart = () => {
-  const ctx = document.getElementById("deliveryStatusChart").getContext("2d");
-
-  // 기존 차트가 있으면 삭제
-  if (pieChartInstance) {
-    pieChartInstance.destroy();
-  }
-
-  // 새 차트 생성
-  pieChartInstance = new Chart(ctx, {
-    type: "pie",
-    data: {
-      labels: ["대기 중", "진행 중", "완료"],
-      datasets: [
-        {
-          label: "배달 상태 비율",
-          data: [statusCounts.value.PENDING, statusCounts.value.IN_PROGRESS, statusCounts.value.COMPLETED],
-          backgroundColor: ["#60a5fa", "#fbbf24", "#34d399"],
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          position: "top",
-        },
-      },
-    },
-  });
-};
-
-// 컴포넌트가 마운트되었을 때 데이터 로드
-onMounted(async () => {
-  await loadStatusCounts(); // 데이터 로드
-  await nextTick(); // DOM 렌더링 이후 실행
-  renderPieChart(); // 차트 렌더링
-});
-
-// 특정 상태를 클릭하면 주문 목록 페이지로 이동
-const goToOrderList = (status) => {
-  router.push({
-    path: "/delivery/orders",
-    query: { status }, // 쿼리로 전달
-  });
-};
-</script>
-
 <template>
-  <div class="max-w-7xl mx-auto p-6">
-    <h2 class="text-2xl font-bold mb-6 text-gray-800">배달 상태별 통계</h2>
-    <!-- 상태별 배달 통계 카드 -->
-    <div class="grid grid-cols-3 gap-6">
+  <div class="dashboard-container">
+    <h1 class="title">Delivery Status Dashboard</h1>
+
+    <div class="status-summary">
       <div
-          class="p-4 bg-gray-200 rounded shadow text-center cursor-pointer hover:bg-blue-100"
-          @click="goToOrderList('PENDING')"
+          v-for="(count, status) in deliveryStatusSummary"
+          :key="status"
+          class="status-card"
       >
-        <h3 class="text-lg font-semibold text-gray-700">대기 중</h3>
-        <p class="text-4xl font-bold text-blue-600">{{ statusCounts.PENDING }}</p>
-      </div>
-      <div
-          class="p-4 bg-gray-200 rounded shadow text-center cursor-pointer hover:bg-yellow-100"
-          @click="goToOrderList('IN_PROGRESS')"
-      >
-        <h3 class="text-lg font-semibold text-gray-700">진행 중</h3>
-        <p class="text-4xl font-bold text-yellow-500">{{ statusCounts.IN_PROGRESS }}</p>
-      </div>
-      <div
-          class="p-4 bg-gray-200 rounded shadow text-center cursor-pointer hover:bg-green-100"
-          @click="goToOrderList('COMPLETED')"
-      >
-        <h3 class="text-lg font-semibold text-gray-700">완료</h3>
-        <p class="text-4xl font-bold text-green-600">{{ statusCounts.COMPLETED }}</p>
+        <h2>{{ statusMap[status] }}</h2> <!-- 한글 상태로 변환 -->
+        <p>{{ count }}</p>
       </div>
     </div>
 
-    <!-- Pie Chart -->
-    <div class="mt-8">
-      <h3 class="text-lg font-semibold text-gray-700 mb-4">전체 배달 상태 비율</h3>
-      <div class="bg-gray-200 rounded shadow p-4">
-        <canvas id="deliveryStatusChart" class="chart-canvas"></canvas>
-      </div>
+    <div class="update-status">
+      <h2>Update Delivery Status</h2>
+      <form @submit.prevent="handleUpdateStatus">
+        <input
+            v-model="updateForm.deliveryId"
+            type="text"
+            placeholder="Delivery ID"
+        />
+        <select v-model="updateForm.newStatus">
+          <option v-for="(label, status) in statusMap" :key="status" :value="status">
+            {{ label }}
+          </option>
+        </select>
+        <button type="submit">Update</button>
+      </form>
     </div>
   </div>
 </template>
 
+<script>
+import { fetchDeliveryStatusSummary, updateDeliveryStatus } from "../../apis/DeliveryAPI";
+
+export default {
+  data() {
+    return {
+      deliveryStatusSummary: {}, // 영어 상태값과 매핑된 카운트
+      updateForm: {
+        deliveryId: "",
+        newStatus: "", // 영어 상태값으로 전달
+      },
+      statusMap: {
+        PENDING: "배달대기중",
+        START: "배달시작",
+        IN_PROGRESS: "배달중",
+        COMPLETED: "완료",
+        CANCELLED: "취소",
+      },
+    };
+  },
+  methods: {
+    async fetchData() {
+      try {
+        this.deliveryStatusSummary = await fetchDeliveryStatusSummary();
+      } catch (error) {
+        alert("Failed to fetch delivery status summary.");
+      }
+    },
+    async handleUpdateStatus() {
+      const { deliveryId, newStatus } = this.updateForm;
+      if (!deliveryId || !newStatus) {
+        alert("Both Delivery ID and Status are required!");
+        return;
+      }
+      try {
+        await updateDeliveryStatus(deliveryId, newStatus); // 영어 상태값 전달
+        alert("Status updated successfully!");
+        this.fetchData();
+      } catch (error) {
+        alert("Failed to update status.");
+      }
+    },
+  },
+  mounted() {
+    this.fetchData();
+  },
+};
+</script>
+
 <style scoped>
-.chart-canvas {
-  max-width: 100%;
-  height: 400px;
+.dashboard-container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background-color: #f9f9f9;
+  color: #333;
+  max-width: 800px;
   margin: 0 auto;
-  display: block;
+}
+
+.title {
+  text-align: center;
+  color: #4a90e2;
+  margin-bottom: 20px;
+}
+
+.status-summary {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.status-card {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  width: 150px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.status-card h2 {
+  font-size: 1.2rem;
+  color: #4a90e2;
+}
+
+.status-card p {
+  font-size: 2rem;
+  color: #333;
+  margin: 0;
+}
+
+.update-status {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.update-status h2 {
+  color: #4a90e2;
+  margin-bottom: 10px;
+}
+
+form {
+  display: flex;
+  gap: 10px;
+}
+
+input,
+select,
+button {
+  padding: 10px;
+  font-size: 1rem;
+}
+
+button {
+  background-color: #4a90e2;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #357ab8;
 }
 </style>

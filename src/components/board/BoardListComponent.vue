@@ -74,7 +74,7 @@
 import {computed, ref} from 'vue';
 import { useRouter } from 'vue-router';
 import useBoardListData from '../../hooks/useBoardListData.js';
-import { getBoardList } from '../../apis/boardAPI';
+import { getBoardList } from '../../apis/BoardAPI';
 
 const router = useRouter();
 const hoveredImage = ref(null);

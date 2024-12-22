@@ -77,6 +77,7 @@ const handleRowClick = (event, orderId) => {
         <th class="border border-gray-300 px-4 py-4 text-left">고객 ID</th>
         <th class="border border-gray-300 px-4 py-4 text-left">주문상태</th>
         <th class="border border-gray-300 px-4 py-4 text-left">총가격</th>
+        <th class="border border-gray-300 px-4 py-4 text-left">결제</th>
         <th class="border border-gray-300 px-4 py-4 text-left">주문시간</th>
       </tr>
       </thead>
@@ -98,10 +99,10 @@ const handleRowClick = (event, orderId) => {
           >
             <option value="PENDING">대기</option>
             <option value="COMPLETED">완료</option>
-            <option value="CANCELLED">취소</option>
           </select>
         </td>
         <td class="border border-gray-300 px-4 py-4">{{ order.totalAmount }}원</td>
+        <td class="border border-gray-300 px-4 py-4">{{ order.payment}}</td>
         <td class="border border-gray-300 px-4 py-4">{{ formatDate(order.orderTime) }}</td>
       </tr>
       </tbody>
